@@ -24,11 +24,20 @@ h1 {
     text-align: center;
 }
 
-#buttons{
-top: 670px;
-align-self: center;
-position:absolute;
+h4{
+    text-align: center;
 }
+
+#themes{
+padding:5px;
+align-self: center;
+position:relative;
+}
+#difficulty{
+    padding:5px;
+    align-self: center;
+    position:relative;
+    }
 
 body {
     align-items:center;
@@ -36,13 +45,36 @@ body {
 
 #new-words{
     padding: 10px;
+    position:relative;
 }
 
 #select-wordlist{
     padding: 10px;
+    position:relative;
 }
 
 #worspeller{
-    padding:20px;
+    padding: 10px;
     color:darkslateblue;
+    position:relative;
+}
+
+#scoreboard{
+    padding: 5px;
+    background-color: rgb(144, 228, 144); 
+    border: 10px;
+}
+
+#timer{
+    padding: 5px; 
+    background-color: rgb(216, 141, 216);
+}
+
+#settings{
+    height: 600px;
+    width: 250px;
+    top:60px;
+    left: 825px;;
+    position: absolute;
+    border: 3px solid #73AD21;
 }
