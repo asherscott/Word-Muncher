@@ -4,24 +4,19 @@ let keyTarget;
 
 
 
-
 // Change these for different effects on the game
-let xPos = 200
-let yPos = 500
+const snakePos = {
+    x: 200,
+    y: 500,
+}
 const size = 20
 const moveDistance = 20
 const spd = 100
 
-// used to pass the x and y variable as a reference
-const snakePos = {
-    x: xPos,
-    y: yPos,
-}
-console.log(snakePos)
 
 
-snake.style.left   = xPos + 'px'
-snake.style.bottom = yPos + 'px'
+snake.style.left   = snakePos.x + 'px'
+snake.style.bottom = snakePos.y + 'px'
 
 snake.style.width  = size + 'px'
 snake.style.height = size + 'px'
@@ -36,54 +31,40 @@ function startSnake(speed, moveDistance) {
     document.addEventListener('keydown', (event) => {
         switch(event.key) {
             case 'ArrowLeft':
-                moveInterval(moveLeft, speed)
+                moveInterval('x', 'left', false, speed)
                 break;
             case 'ArrowUp':
-                moveInterval(moveUp, speed)
+                moveInterval('y', 'bottom', true, speed)
                 break;
             case 'ArrowDown':
-                moveInterval(moveDown, speed)
+                moveInterval('y', 'bottom', false, speed)
                 break;
             default:
-                moveInterval(moveRight, speed)
+                moveInterval('x', 'left', true, speed)
                 break;
         }
     })
 }
 
 
-// move funcs, --condense to single func--
-function moveRight() {
-    xPos += moveDistance;
-    snake.style.left = xPos + 'px'
-}
-function moveLeft() {
-    xPos -= moveDistance;
-    snake.style.left = xPos + 'px'
-}
-function moveUp() {
-    yPos += moveDistance;
-    snake.style.bottom = yPos + 'px'
-}
-function moveDown() {
-    yPos -= moveDistance;
-    snake.style.bottom = yPos + 'px'
-}
-// function move(axisPos, axisWindow, moveRighty) {
-//     (moveRighty === true) 
-//     ? axisPos += moveDistance
-//     : axisPos -= moveDistance;
 
-//     snake.style[axisWindow] = axisPos + 'px'
-// }
+function move(axisPos, axisWindow, moveRighty) {
+    
+    (moveRighty === true) 
+    ? snakePos[axisPos] += moveDistance
+    : snakePos[axisPos] -= moveDistance;
+
+    snake.style[axisWindow] = snakePos[axisPos] + 'px'
+}
+
 
 
 // clears and restarts interval only if user pressed a different key
-function moveInterval(moveFunc, speed) {
+function moveInterval(axisPos, axisWindow, moveRighty, speed) {
     if(keyTarget !== event.key) {
         keyTarget = event.key
 
         clearInterval(intervalId)
-        intervalId = setInterval(moveFunc, speed)
+        intervalId = setInterval(() => move(axisPos, axisWindow, moveRighty), speed)
     }
 }
