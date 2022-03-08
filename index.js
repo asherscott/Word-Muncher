@@ -12,6 +12,12 @@ const size = 20
 const moveDistance = 20
 const spd = 100
 
+// used to pass the x and y variable as a reference
+const snakePos = {
+    x: xPos,
+    y: yPos,
+}
+console.log(snakePos)
 
 
 snake.style.left   = xPos + 'px'
