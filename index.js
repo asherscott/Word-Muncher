@@ -1,20 +1,21 @@
+// Global variables here
 const snake = document.querySelector('#snake')
 let intervalId;
 let keyTarget;
 
 
 
-// Change these for different effects on the game
+// Object because objects as passed parameters vs nums allow for
+// more dynamic stuff. (had trouble creating move() with nums)
 const snakePos = {
-    x: 200,
+    x: 200,     
     y: 500,
 }
 const size = 20
-const moveDistance = 20
-const spd = 100
+const intervalSpeed = 100
 
 
-
+// Initializes snake position and size
 snake.style.left   = snakePos.x + 'px'
 snake.style.bottom = snakePos.y + 'px'
 
@@ -23,13 +24,16 @@ snake.style.height = size + 'px'
 
 
 
-startSnake(spd, moveDistance)
+moveSnake(intervalSpeed)
 
 
 
-function startSnake(speed, moveDistance) {
+function moveSnake(speed) {
     document.addEventListener('keydown', (event) => {
         switch(event.key) {
+            case 'ArrowRight':
+                moveInterval('x', 'left', true, speed)
+                break;
             case 'ArrowLeft':
                 moveInterval('x', 'left', false, speed)
                 break;
@@ -39,32 +43,38 @@ function startSnake(speed, moveDistance) {
             case 'ArrowDown':
                 moveInterval('y', 'bottom', false, speed)
                 break;
-            default:
-                moveInterval('x', 'left', true, speed)
-                break;
         }
     })
 }
 
 
-
-function move(axisPos, axisWindow, moveRighty) {
+// snakeCoordinate = x or y coordinate of the snake
+// windowAxis = the axis the snake will move along
+// movePositive = determines the direction along windowAxis the snake will move. up/down, left/right
+function move(snakeCoordinate, windowAxis, movePositive) {
     
-    (moveRighty === true) 
-    ? snakePos[axisPos] += moveDistance
-    : snakePos[axisPos] -= moveDistance;
+    (movePositive === true) 
+    ? snakePos[snakeCoordinate] += size     // Moves either up or right
+    : snakePos[snakeCoordinate] -= size;    // Moves either down or left
 
-    snake.style[axisWindow] = snakePos[axisPos] + 'px'
+    snake.style[windowAxis] = snakePos[snakeCoordinate] + 'px'  // Displays movement on the DOM
 }
 
 
 
-// clears and restarts interval only if user pressed a different key
-function moveInterval(axisPos, axisWindow, moveRighty, speed) {
-    if(keyTarget !== event.key) {
+// doesn't executes if user presses same button in a row.
+// Ex: repeatedly press ArrowDown then ArrowRight super quick. 
+// You'll notice the snake moves more slowly, because you're 
+// rapidly clearing and restarting the interval. if statement's 
+// purpose is to limit that sluggish movement when spamming one key
+
+// clearing and restarting the interval is needed to prevent 
+// multiple intervals from existing at once, which screws stuff up.
+function moveInterval(snakeCoordinate, windowAxis, moveRighty, speed) {
+    if(keyTarget !== event.key) {   
         keyTarget = event.key
 
         clearInterval(intervalId)
-        intervalId = setInterval(() => move(axisPos, axisWindow, moveRighty), speed)
+        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, moveRighty), speed)
     }
 }
