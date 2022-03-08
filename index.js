@@ -46,7 +46,7 @@ function startSnake(speed, moveDistance) {
 }
 
 
-
+// move funcs, --condense to single func--
 function moveRight() {
     xPos += moveDistance;
     sprite.style.left = xPos + 'px'
@@ -65,7 +65,7 @@ function moveDown() {
 }
 
 
-
+// clears and restarts interval only if user pressed a different key
 function moveInterval(moveDirection, speed) {
     if(keyTarget !== event.key) {
         keyTarget = event.key
