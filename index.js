@@ -1,7 +1,7 @@
 const sprite = document.querySelector('#snake')
 let intervalId;
 let keyTarget;
-const gamespace = document.querySelector(`#gamespace`);
+const gamespace = document.querySelector(`#gamespace`);0
 let maxLeft = gamespace.style.left; 
 
 
@@ -55,7 +55,6 @@ function startSnake(speed, moveDistance) {
 function moveRight() {
     xPos += moveDistance;
     sprite.style.left = xPos + 'px'
-   // debugger;
 }
 function moveLeft() {
     xPos -= moveDistance;

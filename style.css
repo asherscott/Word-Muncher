@@ -1,17 +1,18 @@
 #gamespace {
-    height: 800px;
-    width: 60%;
+    height:600px;
+    width: 500px;
     background-color: powderblue;
     position: static;
     border: 3px solid #73AD21;
+    top:60px;
     left: 300px;
-    float:right;
     position:absolute;
 }
 
 #wordlist {
-    height: 800px;
-    width: 25%;
+    height: 600px;
+    width: 250px;
+    top:60px;
     position: absolute;
     border: 3px solid #73AD21;
 }
@@ -23,4 +24,13 @@ h1 {
     text-align: center;
 }
 
+#buttons{
+top: 670px;
+align-self: center;
+position:absolute;
+}
+
+body {
+    align-items:center;
+}
 
