@@ -34,3 +34,15 @@ body {
     align-items:center;
 }
 
+#new-words{
+    padding: 10px;
+}
+
+#select-wordlist{
+    padding: 10px;
+}
+
+#worspeller{
+    padding:20px;
+    color:darkslateblue;
+}
