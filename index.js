@@ -1,4 +1,4 @@
-const sprite = document.querySelector('#snake')
+const snake = document.querySelector('#snake')
 let intervalId;
 let keyTarget;
 
@@ -14,11 +14,11 @@ const spd = 100
 
 
 
-sprite.style.left   = xPos + 'px'
-sprite.style.bottom = yPos + 'px'
+snake.style.left   = xPos + 'px'
+snake.style.bottom = yPos + 'px'
 
-sprite.style.width  = size + 'px'
-sprite.style.height = size + 'px'
+snake.style.width  = size + 'px'
+snake.style.height = size + 'px'
 
 
 
@@ -49,28 +49,35 @@ function startSnake(speed, moveDistance) {
 // move funcs, --condense to single func--
 function moveRight() {
     xPos += moveDistance;
-    sprite.style.left = xPos + 'px'
+    snake.style.left = xPos + 'px'
 }
 function moveLeft() {
     xPos -= moveDistance;
-    sprite.style.left = xPos + 'px'
+    snake.style.left = xPos + 'px'
 }
 function moveUp() {
     yPos += moveDistance;
-    sprite.style.bottom = yPos + 'px'
+    snake.style.bottom = yPos + 'px'
 }
 function moveDown() {
     yPos -= moveDistance;
-    sprite.style.bottom = yPos + 'px'
+    snake.style.bottom = yPos + 'px'
 }
+// function move(axisPos, axisWindow, moveRighty) {
+//     (moveRighty === true) 
+//     ? axisPos += moveDistance
+//     : axisPos -= moveDistance;
+
+//     snake.style[axisWindow] = axisPos + 'px'
+// }
 
 
 // clears and restarts interval only if user pressed a different key
-function moveInterval(moveDirection, speed) {
+function moveInterval(moveFunc, speed) {
     if(keyTarget !== event.key) {
         keyTarget = event.key
 
         clearInterval(intervalId)
-        intervalId = setInterval(moveDirection, speed)
+        intervalId = setInterval(moveFunc, speed)
     }
 }
