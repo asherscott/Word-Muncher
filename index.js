@@ -1,8 +1,8 @@
 const sprite = document.querySelector('#snake')
 let intervalId;
 let keyTarget;
-
-
+const gamespace = document.querySelector(`#gamespace`);
+let maxLeft = gamespace.style.left; 
 
 
 // Change these for different effects on the game
@@ -11,6 +11,7 @@ let yPos = 500
 const size = 20
 const moveDistance = 20
 const spd = 100
+
 
 
 
@@ -42,7 +43,7 @@ function startSnake(speed, moveDistance) {
             case 'ArrowDown':
                 moveInterval(moveDown, speed)
                 break;
-            default:
+            case `ArrowRight`:
                 moveInterval(moveRight, speed)
                 break;
         }
@@ -54,6 +55,7 @@ function startSnake(speed, moveDistance) {
 function moveRight() {
     xPos += moveDistance;
     sprite.style.left = xPos + 'px'
+   // debugger;
 }
 function moveLeft() {
     xPos -= moveDistance;
@@ -71,10 +73,14 @@ function moveDown() {
 
 
 function moveInterval(moveDirection, speed) {
-    if(keyTarget === event.key) {
+    moveDirection();
+}
 
-    }else {
-        intervalId = setInterval(moveDirection, speed)
-        keyTarget = event.key
-    }
+document.addEventListener(`keydown`, (e) => {
+    console.log(e)
+    if(e.code == "Space") {munch(e)}
+})
+function munch(e){
+   sprite.style.backgroundColor = "pink";
+   setTimeout(() => sprite.style.backgroundColor = "black",500);
 }

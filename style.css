@@ -1,4 +1,26 @@
+#gamespace {
+    height: 800px;
+    width: 60%;
+    background-color: powderblue;
+    position: static;
+    border: 3px solid #73AD21;
+    left: 300px;
+    float:right;
+    position:absolute;
+}
+
+#wordlist {
+    height: 800px;
+    width: 25%;
+    position: absolute;
+    border: 3px solid #73AD21;
+}
 #snake {
     background-color: black;
     position: absolute;
 }
+h1 {
+    text-align: center;
+}
+
+
