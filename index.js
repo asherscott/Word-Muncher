@@ -28,11 +28,7 @@ startSnake(spd, moveDistance)
 
 function startSnake(speed, moveDistance) {
     document.addEventListener('keydown', (event) => {
-        if(keyTarget !== event.key) {
-            clearInterval(intervalId)
-        }
         switch(event.key) {
-    
             case 'ArrowLeft':
                 moveInterval(moveLeft, speed)
                 break;
@@ -71,10 +67,10 @@ function moveDown() {
 
 
 function moveInterval(moveDirection, speed) {
-    if(keyTarget === event.key) {
-
-    }else {
-        intervalId = setInterval(moveDirection, speed)
+    if(keyTarget !== event.key) {
         keyTarget = event.key
+
+        clearInterval(intervalId)
+        intervalId = setInterval(moveDirection, speed)
     }
 }
