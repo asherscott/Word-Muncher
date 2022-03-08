@@ -44,8 +44,11 @@ body {
 }
 
 #new-words{
-    padding: 10px;
+    padding: 5px;
     position:relative;
+}
+input {
+    padding: 5px;
 }
 
 #select-wordlist{
