@@ -2,7 +2,10 @@
 const snake     = document.querySelector('#head')
 const gamespace = document.querySelector(`#gamespace`)
 const charTile  = document.querySelector('#charTile')
-
+const testNestedArray = grabLetters(['hi','yes','ok']);
+let score = 0
+//TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
+let gameOver = false;
 
 const testChar = 'T'
 
@@ -29,15 +32,18 @@ setPosOrSize(snake, 'bottom', snakePos.y)
 setPosOrSize(snake, 'width', size)
 setPosOrSize(snake, 'height', size)
 
+onStart();
+//TODO: add start button
 
+function onStart(){
+    spawnTile(testNestedArray[0].shift())
+    moveSnake(intervalSpeed)
+    //everything that needs to happen when start
 
-moveSnake(intervalSpeed)
-
+}
 
 
 function moveSnake(speed) {
-
-    spawnTile(testChar)
 
     document.addEventListener('keydown', (event) => {
         switch(event.key) {
@@ -101,9 +107,24 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     const tileX = parseInt(charTile.style.left.replace('px', ''))
     const tileY = parseInt(charTile.style.bottom.replace('px', ''))
 
+  function spawnNext(nestedArray) {
+    spawnTile(nestedArray[0].shift())
+    addSnake()
+    console.log(score);
+  }
+
     if (snakePos.x === tileX && snakePos.y === tileY) {
-        spawnTile(testChar)
-        addSnake()
+        //if testNestedArray is 
+        score += 1;
+        if(testNestedArray.length === 0){
+            gameOver = true;
+        }
+        if(testNestedArray[0].length===0 && !gameOver) {
+        testNestedArray.shift()
+        spawnNext(testNestedArray)
+        } else if (!gameOver){
+        spawnNext(testNestedArray)
+        } else {console.log("game over!")}
     }
 }
 
@@ -182,12 +203,11 @@ function loadSelectList(e){
         loadedList = listObj.words
         grabLetters(loadedList)
     })
+    return loadedList
 }
 
 
- /****** Pull Words from Wordlist ********/
-
-////// if list loaded from db.json /////////
+ /****** Pull Words from Wordlist ********/ 
 
 //grabLetters + makeLettersArray creates a nested array of letters
 function grabLetters(wordsArray){
@@ -206,8 +226,12 @@ function makeLetterArray(word){
     }
     return lettersArray
 }
+
+/******Work Through Array of Words, Spawn Tiles  ********/ 
+
 // TODO: (spawn location !== snake location)
 function spawnTile(char) {
+
     // generates a random number between 0 and gamebounds, that is divisable by snake size (spawns on grid)
     let randSpawn = (range) => {
         /*const randNum =*/return (Math.floor(Math.random() * (range / size + 1))) * size
