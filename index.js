@@ -1,9 +1,10 @@
 // Global variables here
-const snake = document.querySelector('#snake')
+const snake     = document.querySelector('#snake')
+const gamespace = document.querySelector(`#gamespace`)
+
 let intervalId;
 let keyTarget;
-const gamespace = document.querySelector(`#gamespace`);0
-let maxLeft = gamespace.style.left; 
+
 
 // Object because objects as passed parameters vs nums allow for
 // more dynamic stuff. (had trouble creating move() with nums)
@@ -29,6 +30,8 @@ moveSnake(intervalSpeed)
 
 
 function moveSnake(speed) {
+
+
     document.addEventListener('keydown', (event) => {
         switch(event.key) {
             case 'ArrowRight':
@@ -58,6 +61,19 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     : snakePos[snakeCoordinate] -= size;    // Moves either down or left
 
     snake.style[windowAxis] = snakePos[snakeCoordinate] + 'px'  // Displays movement on the DOM
+
+
+
+    // Controls the border behavior
+    if(snakePos.x === 480 && windowAxis === 'left') {
+        clearInterval(intervalId)
+    }else if(snakePos.x === 0 && windowAxis === 'left') {
+        clearInterval(intervalId)
+    }else if(snakePos.y === 520 && windowAxis === 'bottom') {
+        clearInterval(intervalId)
+    }else if(snakePos.y === 0 && windowAxis === 'bottom') {
+        clearInterval(intervalId)
+    }
 }
 
 
@@ -79,7 +95,7 @@ function moveInterval(snakeCoordinate, windowAxis, moveRighty, speed) {
     }
 }
 
-function munch(e){
-    snake.style.backgroundColor = "pink";
-    setTimeout(() => snake.style.backgroundColor = "black",500);
- }
+// function munch(e){
+//     snake.style.backgroundColor = "pink";
+//     setTimeout(() => snake.style.backgroundColor = "black",500);
+//  }
