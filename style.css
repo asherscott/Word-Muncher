@@ -20,7 +20,7 @@
     background-color: black;
     position: absolute;
 }
-h1 {
+#banner {
     text-align: center;
 }
 
@@ -64,13 +64,17 @@ input {
 
 #scoreboard{
     padding: 5px;
+    width:50px;
     background-color: rgb(144, 228, 144); 
     border: 10px;
+    float: left;
 }
 
 #timer{
-    padding: 5px; 
+    padding: 5px;
+    width: 50px;
     background-color: rgb(216, 141, 216);
+    float: right; 
 }
 
 #settings{

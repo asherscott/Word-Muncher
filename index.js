@@ -83,3 +83,79 @@ function munch(e){
     snake.style.backgroundColor = "pink";
     setTimeout(() => snake.style.backgroundColor = "black",500);
  }
+
+ /******Word Lists ********/
+
+ /////build your own word list/////
+
+const form = document.querySelector(`#new-words`)
+let userlistCounter = 0
+let newUserList
+
+form.addEventListener(`submit`,(e) => {
+    e.preventDefault();
+    const w1 = document.querySelector(`#w1`).value;
+    const w2 = document.querySelector(`#w2`).value;
+    const w3 = document.querySelector(`#w3`).value;
+    const w4 = document.querySelector(`#w4`).value;
+    const w5 = document.querySelector(`#w5`).value;
+    newUserList = [w1,w2,w3,w4,w5];
+    userlistCounter+=1;
+})
+
+//construct new list object 
+// function constructUserList(){
+//     if(userlistCounter!== 0) {
+//         const userlist = {
+//          name:"userlist"+userlistCounter,
+//          words:newUserList,
+//      }
+//      return userlist;
+//     }
+//  }
+
+//push object to database
+// fetch(`http://localhost:3000/wordlist`,{
+//     method:`POST`,
+//     headers:{"Content-Type":"application/json",
+//     "Accept":"application/json"},
+//     body:JSON.stringify(constructUserList())
+// })
+
+ /////select a wordlist/////
+const dropdown = document.querySelector(`select`);
+dropdown.addEventListener(`change`,(e) => loadSelectList(e))
+let loadedList
+
+function loadSelectList(e){
+    const selectedListId = e.target.value;
+    fetch(`http://localhost:3000/wordlist/${selectedListId}`)
+    .then(returnlistJSON => returnlistJSON.json())
+    .then(listObj => {
+        loadedList = listObj.words
+        grabLetters(loadedList)
+    })
+}
+
+
+ /****** Pull Words from Wordlist ********/
+
+////// if list loaded from db.json /////////
+
+//grabLetters + makeLettersArray creates a nested array of letters
+function grabLetters(wordsArray){
+    //grab word
+    const grabLettersArray = []
+    for (const word of wordsArray) {
+        grabLettersArray.push(makeLetterArray(word))
+      }
+    return grabLettersArray;
+}
+
+function makeLetterArray(word){
+    const lettersArray = []
+    for(letter of word){
+    lettersArray.push(letter)
+    }
+    return lettersArray
+}

@@ -1,0 +1,31 @@
+{
+  "wordlist": [
+    {
+      "id": 1,
+      "name": "4letters",
+      "words": [
+        "hear",
+        "mane",
+        "good"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "5letters",
+      "words": [
+        "happy",
+        "great",
+        "smile"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "6letters",
+      "words": [
+        "simile",
+        "trains",
+        "postal"
+      ]
+    }
+  ]
+}
