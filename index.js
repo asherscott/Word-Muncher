@@ -75,11 +75,9 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 
 
     
-    if(movePositive === true) {
-        snakePos[snakeCoordinate] += size     // Moves either up or right
-    }else {
-        snakePos[snakeCoordinate] -= size;    // Moves either down or left
-    }
+    (movePositive === true) 
+    ? snakePos[snakeCoordinate] += size     // Moves either up or right
+    : snakePos[snakeCoordinate] -= size;    // Moves either down or left
 
     snake.style[windowAxis] = snakePos[snakeCoordinate] + 'px'  // Displays movement on the DOM
 
