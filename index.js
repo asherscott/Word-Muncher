@@ -1,6 +1,9 @@
 // Global variables here
 const snake     = document.querySelector('#snake')
 const gamespace = document.querySelector(`#gamespace`)
+const charTile  = document.querySelector('#charTile')
+
+
 const testChar = 'T'
 
 let intervalId;
@@ -81,10 +84,15 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     }
 
 
-// munchTile()
-// if (snake location === charTile location)
-    // munchTile()
-    // snakeLength()
+
+    const tileX = parseInt(charTile.style.left.replace('px', ''))
+    const tileY = parseInt(charTile.style.bottom.replace('px', ''))
+    if (snakePos.x === tileX && snakePos.y === tileY) {
+        // munchTile()
+        console.log('tt')
+        spawnTile(testChar)
+
+    }
 }
 
 
@@ -121,9 +129,7 @@ function spawnTile(char) {
     // generates a random number between 0 and gamebounds, that is divisable by snake size (spawns on grid)
     let randSpawn = (range) => (Math.floor(Math.random() * (range / size + 1))) * size
 
-    // creates div, sets id and text
-    const charTile = document.createElement('div')
-    charTile.id = 'charTile'
+
     charTile.textContent = char
     // set div dimensions
     charTile.style.width  = size + 'px'
