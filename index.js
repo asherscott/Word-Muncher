@@ -86,7 +86,7 @@ function munch(e){
 
  /******Word Lists ********/
 
- ////build your own word list/////
+ /////build your own word list/////
 
 const form = document.querySelector(`#new-words`)
 let userlistCounter = 0
@@ -122,4 +122,21 @@ form.addEventListener(`submit`,(e) => {
 //     body:JSON.stringify(constructUserList())
 // })
 
- //initial push to get
+ /////select a wordlist/////
+const dropdown = document.querySelector(`select`);
+dropdown.addEventListener(`change`,(e) => loadSelectList(e))
+let loadedList
+
+function loadSelectList(e){
+    const selectedListId = e.target.value;
+    fetch(`http://localhost:3000/wordlist/${selectedListId}`)
+    .then(returnlistJSON => returnlistJSON.json())
+    .then(listObj => {
+        debugger;
+        loadedList = listObj.words
+    })
+}
+
+
+
+ 
