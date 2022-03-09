@@ -105,10 +105,6 @@ function move(snakeCoordinate, windowAxis, movePositive) {
         spawnTile(testChar)
         addSnake()
     }
-
-
-
-
 }
 
 
@@ -143,8 +139,13 @@ function moveInterval(snakeCoordinate, windowAxis, moveRighty, speed) {
 // TODO: (spawn location !== snake location)
 function spawnTile(char) {
     // generates a random number between 0 and gamebounds, that is divisable by snake size (spawns on grid)
-    let randSpawn = (range) => (Math.floor(Math.random() * (range / size + 1))) * size
-
+    let randSpawn = (range) => {
+        /*const randNum =*/return (Math.floor(Math.random() * (range / size + 1))) * size
+        // const snakeBodyArray = Array.from(document.querySelectorAll('.snake'))
+        // snakeBodyArray.forEach(snakePart => {
+        //     (randNum === snakePart) ? randSpawn() : randNum
+        // })
+    }
 
     charTile.textContent = char
     // set div dimensions
