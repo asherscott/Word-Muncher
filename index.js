@@ -8,6 +8,8 @@ const testChar = 'T'
 
 let intervalId;
 let keyTarget;
+let bodyId = 0
+
 
 
 // Object because objects as passed parameters vs nums allow for
@@ -21,11 +23,11 @@ const previousPos = [];     // an array of objects that contain the snakes past 
 
 
 // Initializes snake position and size
-snake.style.left   = snakePos.x + 'px'
-snake.style.bottom = snakePos.y + 'px'
+setPosOrSize(snake, 'left', snakePos.x)
+setPosOrSize(snake, 'bottom', snakePos.y)
 
-snake.style.width  = size + 'px'
-snake.style.height = size + 'px'
+setPosOrSize(snake, 'width', size)
+setPosOrSize(snake, 'height', size)
 
 
 
@@ -60,10 +62,24 @@ function moveSnake(speed) {
 // windowAxis = the axis the snake will move along
 // movePositive = determines the direction along windowAxis the snake will move. up/down, left/right
 function move(snakeCoordinate, windowAxis, movePositive) {
+    // an array of objects that contain the snakes past coordinates
+    previousPos.push({...snakePos})
+    // Controls positions of the snake body divs
+    if(bodyId > 0) {
+        const snakeBodyArray = Array.from(document.querySelectorAll('.snake')).slice(1)
+        snakeBodyArray.forEach((snakeBody, index) => {
+            setPosOrSize(snakeBody, 'left', previousPos[previousPos.length - (index + 1)].x)
+            setPosOrSize(snakeBody, 'bottom', previousPos[previousPos.length - (index + 1)].y)
+        })
+    }
+
+
     
-    (movePositive === true) 
-    ? snakePos[snakeCoordinate] += size     // Moves either up or right
-    : snakePos[snakeCoordinate] -= size;    // Moves either down or left
+    if(movePositive === true) {
+        snakePos[snakeCoordinate] += size     // Moves either up or right
+    }else {
+        snakePos[snakeCoordinate] -= size;    // Moves either down or left
+    }
 
     snake.style[windowAxis] = snakePos[snakeCoordinate] + 'px'  // Displays movement on the DOM
 
@@ -134,21 +150,33 @@ function spawnTile(char) {
 
     charTile.textContent = char
     // set div dimensions
-    charTile.style.width  = size + 'px'
-    charTile.style.height = size + 'px'
+    setPosOrSize(charTile, 'width', size)
+    setPosOrSize(charTile, 'height', size)
     // set div coordinates to random x/y and display on DOM
-    charTile.style.left   = randSpawn(bounds.right) + 'px'
-    charTile.style.bottom = randSpawn(bounds.top) + 'px'
+    setPosOrSize(charTile, 'left', randSpawn(bounds.right))
+    setPosOrSize(charTile, 'bottom', randSpawn(bounds.right))
 
     // console.log(randSpawn(bounds.right), randSpawn(bounds.top), charTile)
     gamespace.append(charTile)
 }
 
 
-
 function addSnake() {
     const snakeBody = document.createElement('div')
     snakeBody.className = 'snake'
-    snake.append(snakeBody)
+    bodyId++
+    snakeBody.id = bodyId
+    setPosOrSize(snakeBody, 'left', previousPos[previousPos.length - 1].x)
+    setPosOrSize(snakeBody, 'bottom', previousPos[previousPos.length - 1].y)
+    
+    setPosOrSize(snakeBody, 'width', size)
+    setPosOrSize(snakeBody, 'height', size)
 
+    gamespace.append(snakeBody)
+    // debugger;
+
+}
+
+function setPosOrSize(var1, var2, var3) {
+    var1.style[var2] = var3 + 'px'
 }
