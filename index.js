@@ -1,6 +1,7 @@
 // Global variables here
 const snake     = document.querySelector('#snake')
 const gamespace = document.querySelector(`#gamespace`)
+const testChar = 'T'
 
 let intervalId;
 let keyTarget;
@@ -8,12 +9,11 @@ let keyTarget;
 
 // Object because objects as passed parameters vs nums allow for
 // more dynamic stuff. (had trouble creating move() with nums)
-const snakePos = {
-    x: 200,     
-    y: 500,
-}
+const snakePos = {x: 0, y: 300}
 const size = 20
 const intervalSpeed = 100
+
+const bounds = {left: 0, right: 480, top: 520, bottom: 0}
 
 
 // Initializes snake position and size
@@ -31,6 +31,7 @@ moveSnake(intervalSpeed)
 
 function moveSnake(speed) {
 
+    spawnTile(testChar)
 
     document.addEventListener('keydown', (event) => {
         switch(event.key) {
@@ -65,6 +66,10 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 
 
     // Controls the border behavior
+    // if the snake is against the border AND trying to go outside
+    // then stop movement
+
+    // TODO: make hardcoded conditionals work with "bounds"
     if(snakePos.x === 480 && windowAxis === 'left') {
         clearInterval(intervalId)
     }else if(snakePos.x === 0 && windowAxis === 'left') {
@@ -74,6 +79,12 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     }else if(snakePos.y === 0 && windowAxis === 'bottom') {
         clearInterval(intervalId)
     }
+
+
+// munchTile()
+// if (snake location === charTile location)
+    // munchTile()
+    // snakeLength()
 }
 
 
@@ -99,3 +110,28 @@ function moveInterval(snakeCoordinate, windowAxis, moveRighty, speed) {
 //     snake.style.backgroundColor = "pink";
 //     setTimeout(() => snake.style.backgroundColor = "black",500);
 //  }
+
+
+
+
+
+
+// TODO: (spawn location !== snake location)
+function spawnTile(char) {
+    // generates a random number between 0 and gamebounds, that is divisable by snake size (spawns on grid)
+    let randSpawn = (range) => (Math.floor(Math.random() * (range / size + 1))) * size
+
+    // creates div, sets id and text
+    const charTile = document.createElement('div')
+    charTile.id = 'charTile'
+    charTile.textContent = char
+    // set div dimensions
+    charTile.style.width  = size + 'px'
+    charTile.style.height = size + 'px'
+    // set div coordinates to random x/y and display on DOM
+    charTile.style.left   = randSpawn(bounds.right) + 'px'
+    charTile.style.bottom = randSpawn(bounds.top) + 'px'
+
+    // console.log(randSpawn(bounds.right), randSpawn(bounds.top), charTile)
+    gamespace.append(charTile)
+}
