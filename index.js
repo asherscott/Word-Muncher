@@ -132,11 +132,30 @@ function loadSelectList(e){
     fetch(`http://localhost:3000/wordlist/${selectedListId}`)
     .then(returnlistJSON => returnlistJSON.json())
     .then(listObj => {
-        debugger;
         loadedList = listObj.words
+        grabLetters(loadedList)
     })
 }
 
 
+ /****** Pull Words from Wordlist ********/
 
- 
+////// if list loaded from db.json /////////
+
+//grabLetters + makeLettersArray creates a nested array of letters
+function grabLetters(wordsArray){
+    //grab word
+    const grabLettersArray = []
+    for (const word of wordsArray) {
+        grabLettersArray.push(makeLetterArray(word))
+      }
+    return grabLettersArray;
+}
+
+function makeLetterArray(word){
+    const lettersArray = []
+    for(letter of word){
+    lettersArray.push(letter)
+    }
+    return lettersArray
+}
