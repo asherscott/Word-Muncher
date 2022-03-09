@@ -88,9 +88,9 @@ function munch(e){
 
  ////build your own word list/////
 
- //grab containers
 const form = document.querySelector(`#new-words`)
 let userlistCounter = 0
+let newUserList
 
 form.addEventListener(`submit`,(e) => {
     e.preventDefault();
@@ -99,23 +99,27 @@ form.addEventListener(`submit`,(e) => {
     const w3 = document.querySelector(`#w3`).value;
     const w4 = document.querySelector(`#w4`).value;
     const w5 = document.querySelector(`#w5`).value;
-    const userWordlist = [w1,w2,w3,w4,w5];
-    userlistCounter++;
-    console.log(userWordlist);
-    return userWordlist
+    newUserList = [w1,w2,w3,w4,w5];
+    userlistCounter+=1;
 })
-const userlist = {
-    name:"userlist"+userlistCounter,
-    words:userWordlist,
-}
 
-//push to database
-fetch(`http://localhost:3000/wordlist`,{
-    method:`POST`,
-    headers:{"Content-Type":"application/json",
-    "Accept":"application/json"},
-    body:JSON.stringify(userlist)
-})
-.then()
+//construct new list object 
+// function constructUserList(){
+//     if(userlistCounter!== 0) {
+//         const userlist = {
+//          name:"userlist"+userlistCounter,
+//          words:newUserList,
+//      }
+//      return userlist;
+//     }
+//  }
+
+//push object to database
+// fetch(`http://localhost:3000/wordlist`,{
+//     method:`POST`,
+//     headers:{"Content-Type":"application/json",
+//     "Accept":"application/json"},
+//     body:JSON.stringify(constructUserList())
+// })
 
  //initial push to get
