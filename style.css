@@ -16,7 +16,7 @@
     position: absolute;
     border: 3px solid #73AD21;
 }
-#snake {
+.snake {
     background-color: black;
     position: absolute;
 }
@@ -84,4 +84,8 @@ input {
     left: 825px;;
     position: absolute;
     border: 3px solid #73AD21;
+}
+#charTile {
+    border: 2px solid black;
+    position: absolute;
 }
