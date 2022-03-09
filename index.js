@@ -83,3 +83,39 @@ function munch(e){
     snake.style.backgroundColor = "pink";
     setTimeout(() => snake.style.backgroundColor = "black",500);
  }
+
+ /******Word Lists ********/
+
+ ////build your own word list/////
+
+ //grab containers
+const form = document.querySelector(`#new-words`)
+let userlistCounter = 0
+
+form.addEventListener(`submit`,(e) => {
+    e.preventDefault();
+    const w1 = document.querySelector(`#w1`).value;
+    const w2 = document.querySelector(`#w2`).value;
+    const w3 = document.querySelector(`#w3`).value;
+    const w4 = document.querySelector(`#w4`).value;
+    const w5 = document.querySelector(`#w5`).value;
+    const userWordlist = [w1,w2,w3,w4,w5];
+    userlistCounter++;
+    console.log(userWordlist);
+    return userWordlist
+})
+const userlist = {
+    name:"userlist"+userlistCounter,
+    words:userWordlist,
+}
+
+//push to database
+fetch(`http://localhost:3000/wordlist`,{
+    method:`POST`,
+    headers:{"Content-Type":"application/json",
+    "Accept":"application/json"},
+    body:JSON.stringify(userlist)
+})
+.then()
+
+ //initial push to get
