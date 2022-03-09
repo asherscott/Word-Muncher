@@ -1,5 +1,5 @@
 // Global variables here
-const snake     = document.querySelector('#snake')
+const snake     = document.querySelector('#head')
 const gamespace = document.querySelector(`#gamespace`)
 const charTile  = document.querySelector('#charTile')
 
@@ -17,6 +17,7 @@ const size = 20
 const intervalSpeed = 100
 
 const bounds = {left: 0, right: 480, top: 520, bottom: 0}
+const previousPos = [];     // an array of objects that contain the snakes past coordinates
 
 
 // Initializes snake position and size
@@ -68,10 +69,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 
 
 
-    // Controls the border behavior
-    // if the snake is against the border AND trying to go outside
-    // then stop movement
-
+    // stop movement if the snake is against the border AND trying to go outside 
     // TODO: make hardcoded conditionals work with "bounds"
     if(snakePos.x === 480 && windowAxis === 'left') {
         clearInterval(intervalId)
@@ -85,14 +83,18 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 
 
 
+    // checks if tile coordinates match snake coordinates
     const tileX = parseInt(charTile.style.left.replace('px', ''))
     const tileY = parseInt(charTile.style.bottom.replace('px', ''))
-    if (snakePos.x === tileX && snakePos.y === tileY) {
-        // munchTile()
-        console.log('tt')
-        spawnTile(testChar)
 
+    if (snakePos.x === tileX && snakePos.y === tileY) {
+        spawnTile(testChar)
+        addSnake()
     }
+
+
+
+
 }
 
 
@@ -140,4 +142,13 @@ function spawnTile(char) {
 
     // console.log(randSpawn(bounds.right), randSpawn(bounds.top), charTile)
     gamespace.append(charTile)
+}
+
+
+
+function addSnake() {
+    const snakeBody = document.createElement('div')
+    snakeBody.className = 'snake'
+    snake.append(snakeBody)
+
 }

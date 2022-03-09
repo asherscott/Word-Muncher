@@ -16,7 +16,7 @@
     position: absolute;
     border: 3px solid #73AD21;
 }
-#snake {
+.snake {
     background-color: black;
     position: absolute;
 }
