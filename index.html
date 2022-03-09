@@ -6,25 +6,29 @@
         <script defer rel="js" src="index.js"></script>
     </head>
     <body>
+    <div id ="banner">
+    <div id = "scoreboard">SCORE <span>0</span></div>
     <h1>WORD MUNCHER</h1>
+    <div id = "timer">TIMER <span>0</div>
+    </div>
         <div id = "wordlist">
                 <form id="new-words">
                     <h4>Build Your Own Wordlist</h4>
                     <label for="w1"> 1. </label>
                     <input type="text" name="w1" id="w1" />
-
+                    <br>
                     <label for="w2"> 2. </label>
                     <input type="text" name="w2" id="w2"/>
-
+                    <br>
                     <label for="w3"> 3.</label>
                     <input type="text" name="w3" id="w3" />
-
+                    <br>
                     <label for="w4"> 4.</label>
                     <input type="text" name="w3" id="w4" />
-
+                    <br>
                     <label for="w5"> 5.</label>
                     <input type="text" name="w5" id="w5" />
-
+                    <br>
                     <input type="submit" value="Create" />
                 </form>
             <label for="select-wordlist" class = "dropdown"><h4>Select a Word List</h4></label>
@@ -40,8 +44,6 @@
             </div>
         <div id ="gamespace">
             <div id="snake"></div>
-            <div id = "scoreboard">0</div>
-            <div id = "timer"><span>0</div>
         </div>
         <div id = "settings">
             <h4>Settings Menu</h4>
