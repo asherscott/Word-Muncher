@@ -154,14 +154,15 @@ function move(snakeCoordinate, windowAxis, movePositive) {
             updateScore()
             munch();
             spellWord(charTile.innerText);
+            clearTiles();
             gameOver = true;
             //endGame();
         }
         else if(gameWords[0].length===0 && !gameOver) {
-            clearTiles();
-            //call to function -> populating to munchedList 
             gameWords.shift()
             spawnNext(gameWords)
+            //call to function -> populating to munchedList 
+            clearTiles();
         }
         else if (!gameOver){
         spawnNext(gameWords)
@@ -172,7 +173,9 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 function clearTiles() {
     const gamehead = document.querySelector(`#gameHead`)
     debugger;
-    gamehead.querySelectorAll('.tiles').remove()
+    while (gamehead.firstChild) {
+        gamehead.removeChild(gamehead.firstChild);
+      }
 }
 
 // doesn't executes if user presses same button in a row.
@@ -282,7 +285,6 @@ function chooseList(){
     } else {
         gameWords = grabLetters(defaultList)
     }
-    debugger;
     return gameWords
 }
 
