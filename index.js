@@ -210,11 +210,15 @@ function makeLetterArray(word){
 function spawnTile(char) {
     // generates a random number between 0 and gamebounds, that is divisable by snake size (spawns on grid)
     let randSpawn = (range) => {
-        /*const randNum =*/return (Math.floor(Math.random() * (range / size + 1))) * size
-        // const snakeBodyArray = Array.from(document.querySelectorAll('.snake'))
+        const snakeBodyArray = Array.from(document.querySelectorAll('.snake'))
+
+        const randNum = (Math.floor(Math.random() * (range / size + 1))) * size
+        
         // snakeBodyArray.forEach(snakePart => {
-        //     (randNum === snakePart) ? randSpawn() : randNum
+        //     if(randNum === (parseInt(snakePart.style.left.replace('px', '')) || parseInt(snakePart.style.bottom.replace('px', '')))) {
+        //         randSpawn(range)
         // })
+        return randNum
     }
 
     charTile.textContent = char
