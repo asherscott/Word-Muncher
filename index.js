@@ -170,7 +170,8 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 } 
 
 function clearTiles() {
-    const gamehead = document.querySelector(`#gamehead`)
+    const gamehead = document.querySelector(`#gameHead`)
+    debugger;
     gamehead.querySelectorAll('.tiles').remove()
 }
 
