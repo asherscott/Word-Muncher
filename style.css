@@ -101,6 +101,7 @@
 }
 
 #endgame{
+    display:none;
    background-color:chartreuse;
    position: relative;
    height:400px;
@@ -108,7 +109,6 @@
    border: 1px dashed #996;
    background-color: rgb(62, 136, 136);
    opacity: 0.5;
-   display: block;
   margin-left: auto;
   margin-right: auto;
   text-align: center;

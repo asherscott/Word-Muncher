@@ -31,7 +31,6 @@ const previousPos = [];
 window.onload = function(){
     const startBttn = document.querySelector(`#startBttn`)
     startBttn.addEventListener(`click`, onStart)
-    gamespace.append(startBttn);
 }
 //TODO: add start button
 //everything that needs to happen when start
@@ -53,18 +52,12 @@ function onStart(){
 
 }
 
+if(endGame){endGame()}
 function endGame(){
-    //stop snake movement
-    //add ENDGAME screen
-    const body = document.querySelector(`#body`)
-   const endGameScreen= document.createElement(`form`);
-    endGameScreen.id = "endGame";
-    const restartBttn = document.createElement(`input`)
-    restartBttn.type = "submit"
-    restartBttn.value = "Play Again"
-    endGameScreen.addEventListener(`submit`,() => reload)
-    endGameScreen.append(restartBttn)
-    body.append(endGameScreen)
+    //make endscreen visible 
+    //add event listener to playAgain button
+    //clear out "words munched list"
+    //push score/time to scorelist
 }
 
 function reload(){
