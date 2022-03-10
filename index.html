@@ -5,10 +5,14 @@
         <link rel="stylesheet" href="style.css">
         <script defer rel="js" src="index.js"></script>
     </head>
+
     <body>
-    <div id ="banner">
-    <h1>WORD MUNCHER</h1>
-        <div id = "wordlist">
+        <header id ="banner">
+            <h1>WORD MUNCHER</h1>
+        </header>
+
+        <div id="body">
+            <div id = "wordlist">
                 <form id="new-words">
                     <h4>Build Your Own Wordlist</h4>
                     <label for="w1"> 1. </label>
@@ -39,26 +43,42 @@
                     <ul></ul>
                 </div>
             </div>
-        <div id ="gamespace">
-            <div class= "snake" id="head"></div>
-            <div id = "scoreboard">SCORE <span>0</span></div>
-            <div id = "timer">TIME <span>0</div>
-            <div id="charTile"></div>
-        </div>
-        <div id = "settings">
-            <h4>Settings Menu</h4>
-            <div id = "themes">
-                <h4>Change Theme</h4>
-                <button class = "button" id = "theme1">Theme 1</button>
-                <button class = "button" id = "theme2">Theme 2</button>
-                <button class = "button" id = "theme3">Theme 3</button>
+        
+            <div id="gameColumn">
+                <div id="gameHead">
+                    <div class="tiles">T</div>  
+                    <div class="tiles">E</div>
+                    <div class="tiles">S</div>
+                    <div class="tiles">T</div>
+                    <div class="tiles">I</div>
+                    <div class="tiles">N</div>
+                    <div class="tiles">G</div>
+                </div>
+                <div id ="gamespace">
+                    <div id = "scoreboard">SCORE <span>0</span></div>
+                    <div id = "timer">TIME <span>0</span></div>
+
+                    <div class= "snake" id="head"></div>
+                    <div class="tiles" id="charTile"></div>
+                </div>
             </div>
-            <div id = "difficulty">
-                <h4>Difficulty</h4>
-                <button class = "button" id = "easy">Easy</button>
-                <button class = "button" id = "medium">Medium</button>
-                <button class = "button" id = "hard">Hard</button>
+
+            <div id = "settings">
+                <h4>Settings Menu</h4>
+                <div id = "themes">
+                    <h4>Change Theme</h4>
+                    <button class = "button" id = "theme1">Theme 1</button>
+                    <button class = "button" id = "theme2">Theme 2</button>
+                    <button class = "button" id = "theme3">Theme 3</button>
+                </div>
+                <div id = "difficulty">
+                    <h4>Difficulty</h4>
+                    <button class = "button" id = "easy">Easy</button>
+                    <button class = "button" id = "medium">Medium</button>
+                    <button class = "button" id = "hard">Hard</button>
+                </div>
             </div>
         </div>
+
     </body>
 </html>

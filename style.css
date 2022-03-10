@@ -1,94 +1,100 @@
-#gamespace {
-    height:600px;
-    width: 500px;
-    background-color: powderblue;
-    position: static;
-    border: 3px solid #73AD21;
-    top:60px;
-    left: 300px;
-    position:absolute;
+* {
+    box-sizing: border-box;
+}
+
+#body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#banner {
+    text-align: center;
+    width: 100%;
+    height: 80px;
+    background-color: blueviolet;
 }
 
 #wordlist {
+    flex: 0 1 250px;
     height: 600px;
-    width: 250px;
-    top:60px;
-    position: absolute;
     border: 3px solid #73AD21;
+    text-align: center;
 }
-.snake {
-    background-color: black;
-    position: absolute;
+
+#gameColumn {
+    display: flex;
+    flex-flow: column wrap;
+    flex: 0 0 500px;
 }
 #start{
     background-color: #73AD21;
 }
-#banner {
-    text-align: center;
+
+#gameHead {
+    background-color: blanchedalmond;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 100px;
 }
 
-h4{
-    text-align: center;
+#gamespace {
+    flex: 500px ;
+    background-color: powderblue;
+    border: 3px solid #73AD21;
+    position: relative;
 }
 
-#themes{
-padding:5px;
-align-self: center;
-position:relative;
+#settings{
+    flex: 0 1 250px;
+    border: 3px solid #73AD21;
+    text-align: center;
+    height: 600px;
 }
-#difficulty{
+
+#themes, #difficulty {
     padding:5px;
     align-self: center;
-    position:relative;
-    }
-
-body {
-    align-items:center;
+    position: relative;
 }
 
-#new-words{
+#new-words, input {
     padding: 5px;
-    position:relative;
-}
-input {
-    padding: 5px;
+    position: relative;
 }
 
 #select-wordlist{
     padding: 10px;
-    position:relative;
+    position: relative;
 }
 
 #worspeller{
     padding: 10px;
     color:darkslateblue;
-    position:relative;
+    position: relative;
 }
 
-#scoreboard{
-    padding: 5px;
-    width:50px;
-    background-color: rgb(144, 228, 144); 
-    border: 10px;
-    float: left;
+#scoreboard, #timer {
+    background-color: rgba(0, 0, 0, 0.1); 
 }
 
-#timer{
-    padding: 5px;
-    width: 50px;
-    background-color: rgb(216, 141, 216);
-    float: right; 
-}
-
-#settings{
-    height: 600px;
-    width: 250px;
-    top:60px;
-    left: 825px;;
-    position: absolute;
-    border: 3px solid #73AD21;
-}
-#charTile {
+.tiles {
     border: 2px solid black;
+    flex: 0 1 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px;
+}
+
+#charTile {
+    position: absolute;
+}
+
+.snake {
+    background-color: black;
     position: absolute;
 }

@@ -1,6 +1,7 @@
 // Global variables here
 const snake     = document.querySelector('#head')
 const gamespace = document.querySelector(`#gamespace`)
+const gameHead  = document.querySelector('#gameHead')
 const charTile  = document.querySelector('#charTile')
 let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
@@ -9,7 +10,7 @@ let loadedList;
 let newUserList
 let gameWords
 let gameOver = false;
-
+let wordOver = false;
 //TEST VARIABLES//
 const testNestedArray = grabLetters(['hi','yes','ok']);
 const testChar = 'T'
@@ -20,14 +21,13 @@ let bodyId = 0
 
 
 
-// Object because objects as passed parameters vs nums allow for
-// more dynamic stuff. (had trouble creating move() with nums)
 const snakePos = {x: 0, y: 300}
 const size = 20
 const intervalSpeed = 100
 
-const bounds = {left: 0, right: 480, top: 520, bottom: 0}
-const previousPos = [];     // an array of objects that contain the snakes past coordinates
+const bounds = {min: 0, max: 480}
+const previousPos = [];
+
 
 
 window.onload = function(){
@@ -87,9 +87,7 @@ function moveSnake(speed) {
 }
 
 
-// snakeCoordinate = x or y coordinate of the snake
-// windowAxis = the axis the snake will move along
-// movePositive = determines the direction along windowAxis the snake will move. up/down, left/right
+// movePositive = determines the direction along windowAxis the snake will move. up/down, left/max
 function move(snakeCoordinate, windowAxis, movePositive) {
     // an array of objects that contain the snakes past coordinates
     previousPos.push({...snakePos})
@@ -105,7 +103,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 
     
     (movePositive === true) 
-    ? snakePos[snakeCoordinate] += size     // Moves either up or right
+    ? snakePos[snakeCoordinate] += size     // Moves either up or max
     : snakePos[snakeCoordinate] -= size;    // Moves either down or left
 
     snake.style[windowAxis] = snakePos[snakeCoordinate] + 'px'  // Displays movement on the DOM
@@ -118,7 +116,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
         clearInterval(intervalId)
     }else if(snakePos.x === 0 && windowAxis === 'left') {
         clearInterval(intervalId)
-    }else if(snakePos.y === 520 && windowAxis === 'bottom') {
+    }else if(snakePos.y === 480 && windowAxis === 'bottom') {
         clearInterval(intervalId)
     }else if(snakePos.y === 0 && windowAxis === 'bottom') {
         clearInterval(intervalId)
@@ -131,6 +129,8 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     const tileY = parseInt(charTile.style.bottom.replace('px', ''))
 
   function spawnNext(nestedArray) {
+    spellWord(charTile.innerText);
+    // const poppedLetter = 
     munch();
     updateScore()
     spawnTile(nestedArray[0].shift())
@@ -152,10 +152,14 @@ function move(snakeCoordinate, windowAxis, movePositive) {
         //if testNestedArray is 
         if(gameWords[0].length === 0 && gameWords.length === 1){
             updateScore()
+            munch();
+            spellWord(charTile.innerText);
             gameOver = true;
             //endGame();
         }
         else if(gameWords[0].length===0 && !gameOver) {
+            clearTiles();
+            //call to function -> populating to munchedList 
             gameWords.shift()
             spawnNext(gameWords)
         }
@@ -165,21 +169,25 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     }
 } 
 
+function clearTiles() {
+    const gamehead = document.querySelector(`#gamehead`)
+    gamehead.querySelectorAll('.tiles').remove()
+}
 
 // doesn't executes if user presses same button in a row.
-// Ex: repeatedly press ArrowDown then ArrowRight super quick. 
+// Ex: repeatedly press ArrowDown then Arrowmax super quick. 
 // You'll notice the snake moves more slowly, because you're 
 // rapidly clearing and restarting the interval. if statement's 
 // purpose is to limit that sluggish movement when spamming one key
 
 // clearing and restarting the interval is needed to prevent 
 // multiple intervals from existing at once, which screws stuff up.
-function moveInterval(snakeCoordinate, windowAxis, moveRighty, speed) {
+function moveInterval(snakeCoordinate, windowAxis, movemaxy, speed) {
     if(keyTarget !== event.key) {   
         keyTarget = event.key
 
         clearInterval(intervalId)
-        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, moveRighty), speed)
+        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, movemaxy), speed)
     }
 }
 
@@ -265,7 +273,7 @@ function makeLetterArray(word){
 ////Choose List///////
 
 function chooseList(){
-    debugger;
+    // debugger;
     if(newUserList){
         gameWords = grabLetters(newUserList)
     } else if (loadedList) {
@@ -284,11 +292,15 @@ function spawnTile(char) {
 
     // generates a random number between 0 and gamebounds, that is divisable by snake size (spawns on grid)
     let randSpawn = (range) => {
-        /*const randNum =*/return (Math.floor(Math.random() * (range / size + 1))) * size
-        // const snakeBodyArray = Array.from(document.querySelectorAll('.snake'))
+        const snakeBodyArray = Array.from(document.querySelectorAll('.snake'))
+
+        const randNum = (Math.floor(Math.random() * (range / size + 1))) * size
+        
         // snakeBodyArray.forEach(snakePart => {
-        //     (randNum === snakePart) ? randSpawn() : randNum
+        //     if(randNum === (parseInt(snakePart.style.left.replace('px', '')) || parseInt(snakePart.style.bottom.replace('px', '')))) {
+        //         randSpawn(range)
         // })
+        return randNum
     }
 
     charTile.textContent = char
@@ -296,10 +308,10 @@ function spawnTile(char) {
     setPosOrSize(charTile, 'width', size)
     setPosOrSize(charTile, 'height', size)
     // set div coordinates to random x/y and display on DOM
-    setPosOrSize(charTile, 'left', randSpawn(bounds.right))
-    setPosOrSize(charTile, 'bottom', randSpawn(bounds.right))
+    setPosOrSize(charTile, 'left', randSpawn(bounds.max))
+    setPosOrSize(charTile, 'bottom', randSpawn(bounds.max))
 
-    // console.log(randSpawn(bounds.right), randSpawn(bounds.top), charTile)
+    // console.log(randSpawn(bounds.max), randSpawn(bounds.top), charTile)
     gamespace.append(charTile)
 }
 
@@ -323,3 +335,20 @@ function addSnake() {
 function setPosOrSize(var1, var2, var3) {
     var1.style[var2] = var3 + 'px'
 }
+
+// TODO: When word is done, remove all divs
+function spellWord(char) {
+    const newTile = document.createElement('div')
+    newTile.className = 'tiles'
+    newTile.textContent = char
+    gameHead.append(newTile)
+
+}
+
+// tile dimensions
+
+// const tileWidth = document.querySelector('.tiles').offsetWidth
+// let tileHeight = document.querySelector('.tiles').offsetHeight
+
+// document.querySelector('.tiles').offsetHeight = tileWidth
+
