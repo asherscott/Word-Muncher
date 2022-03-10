@@ -29,9 +29,7 @@ const previousPos = [];
 
 
 window.onload = function(){
-    const startBttn = document.createElement(`div`)
-    startBttn.id = "start"
-    startBttn.innerText = "START"
+    const startBttn = document.querySelector(`#startBttn`)
     startBttn.addEventListener(`click`, onStart)
     gamespace.append(startBttn);
 }
@@ -52,6 +50,24 @@ function onStart(){
     moveSnake(intervalSpeed)
 
     setInterval(count,1000);
+
+}
+
+function endGame(){
+    //stop snake movement
+    //add ENDGAME screen
+    const body = document.querySelector(`#body`)
+   const endGameScreen= document.createElement(`form`);
+    endGameScreen.id = "endGame";
+    const restartBttn = document.createElement(`input`)
+    restartBttn.type = "submit"
+    restartBttn.value = "Play Again"
+    endGameScreen.addEventListener(`submit`,() => reload)
+    endGameScreen.append(restartBttn)
+    body.append(endGameScreen)
+}
+
+function reload(){
 
 }
 /*****Timer*******/
@@ -121,7 +137,6 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     }
 
 
-
     // checks if tile coordinates match snake coordinates
     const tileX = parseInt(charTile.style.left.replace('px', ''))
     const tileY = parseInt(charTile.style.bottom.replace('px', ''))
@@ -133,9 +148,6 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     updateScore()
     spawnTile(nestedArray[0].shift())
     addSnake()
-    console.log("score:"+scoreValue);
-    console.log("nested array length:" +nestedArray[0].length)
-    console.log("array length:" +nestedArray.length)
   }
 
   function updateScore(){
@@ -240,14 +252,11 @@ function loadSelectList(e){
  /****** Pull Words from Wordlist ********/ 
 //grabLetters + makeLettersArray creates a nested array of letters
 function grabLetters(wordsArray){
-    //grab word
-    console.log("wordsArray:"+wordsArray)
     const grabLettersArray = []
     for (const word of wordsArray) {
         grabLettersArray.push(makeLetterArray(word))
       };
     gameWords = grabLettersArray;
-    console.log(gameWords);
     return grabLettersArray;
 }
 

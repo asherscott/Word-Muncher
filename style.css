@@ -27,7 +27,8 @@
     flex-flow: column wrap;
     flex: 0 0 500px;
 }
-#start{
+#startBttn{
+    position:relative;
     background-color: #73AD21;
 }
 
@@ -97,4 +98,23 @@
 .snake {
     background-color: black;
     position: absolute;
+}
+
+#endgame{
+   background-color:chartreuse;
+   position: relative;
+   height:400px;
+   width:500px;
+   border: 1px dashed #996;
+   background-color: rgb(62, 136, 136);
+   opacity: 0.5;
+   display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding: 70px 0;
+}
+
+input {
+    opacity:1.0;
 }
