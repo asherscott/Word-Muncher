@@ -1,6 +1,7 @@
 // Global variables here
 const snake     = document.querySelector('#head')
 const gamespace = document.querySelector(`#gamespace`)
+const gameHead  = document.querySelector('#gameHead')
 const charTile  = document.querySelector('#charTile')
 
 
@@ -104,6 +105,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     if (snakePos.x === tileX && snakePos.y === tileY) {
         spawnTile(testChar)
         addSnake()
+        spellWord(testChar)
     }
 }
 
@@ -252,4 +254,13 @@ function addSnake() {
 
 function setPosOrSize(var1, var2, var3) {
     var1.style[var2] = var3 + 'px'
+}
+
+function spellWord(char) {
+    console.log('tt')
+
+    const newTile = document.createElement('div')
+    newTile.className = 'tiles'
+    newTile.textContent = char
+    gameHead.append(newTile)
 }
