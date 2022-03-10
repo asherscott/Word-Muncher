@@ -334,21 +334,18 @@ function addSnake() {
     setPosOrSize(snakeBody, 'height', size)
 
     gamespace.append(snakeBody)
-    // debugger;
-
 }
 
 function setPosOrSize(var1, var2, var3) {
     var1.style[var2] = var3 + 'px'
 }
 
-// TODO: When word is done, remove all divs
+
 function spellWord(char) {
     const newTile = document.createElement('div')
     newTile.className = 'tiles'
     newTile.textContent = char
     gameHead.append(newTile)
-
 }
 
 // tile dimensions
@@ -359,11 +356,11 @@ function spellWord(char) {
 // document.querySelector('.tiles').offsetHeight = tileWidth
 
 function displayList(list) {
-    wordList.innerHTML = ''
+    const ul = wordList.querySelector('ul')
+    ul.innerHTML =''
     list.forEach(word => {
-        const wordList = document.querySelector('#wordList')
         const li = document.createElement('li')
         li.textContent = word
-        wordList.append(li)
+        ul.append(li)
     })
 }
