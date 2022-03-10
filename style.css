@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 #body {
     display: flex;
     align-items: center;
@@ -27,16 +31,17 @@
 #gameHead {
     background-color: blanchedalmond;
     display: flex;
-    flex-flow: row wrap;
-    justify-content: space-evenly;
-    flex: 0 0 100px;
+    flex-flow: row nowrap;
+    justify-content: center;
     align-items: center;
+    flex: 0 0 100px;
 }
 
 #gamespace {
     flex: 500px ;
     background-color: powderblue;
     border: 3px solid #73AD21;
+    position: relative;
 }
 
 #settings{
@@ -74,11 +79,12 @@
 
 .tiles {
     border: 2px solid black;
+    flex: 0 1 50px;
     height: 50px;
-    width: 50px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
+    margin: 2px;
 }
 
 #charTile {
