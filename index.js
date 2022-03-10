@@ -1,8 +1,9 @@
 // Global variables here
-const snake     = document.querySelector('#head')
-const gamespace = document.querySelector(`#gamespace`)
-const gameHead  = document.querySelector('#gameHead')
-const charTile  = document.querySelector('#charTile')
+const snake         = document.querySelector('#head')
+const gamespace     = document.querySelector(`#gamespace`)
+const gameHead      = document.querySelector('#gameHead')
+const charTile      = document.querySelector('#charTile')
+const munchedList   = document.querySelector('#munchedList')
 let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
 const defaultList =['test','test']
@@ -30,12 +31,15 @@ const previousPos = [];
 
 
 
-window.onload = function(){
+window.onload = function() {
     const startBttn = document.createElement(`div`)
     startBttn.id = "start"
     startBttn.innerText = "START"
     startBttn.addEventListener(`click`, onStart)
     gamespace.append(startBttn);
+
+    charTile.style.display = 'none'
+    munchedList.style.display = 'none'
 }
 //TODO: add start button
 //everything that needs to happen when start
@@ -50,18 +54,21 @@ function onStart(){
     setPosOrSize(snake, 'width', size)
     setPosOrSize(snake, 'height', size)
 
+    charTile.style.display = 'block'
     spawnTile(gameWords[0].shift())
     moveSnake(intervalSpeed)
 
     setInterval(count,1000);
 
+    // clears WordSpeller on start
+    gameHead.innerHTML = ''
 }
 
 function count(){
-if(!gameOver) {
-    const timer = document.querySelector("#timer")
-    const time = timer.querySelector('span')
-    time.innerText = parseInt(time.innerText)+1
+    if(!gameOver) {
+        const timer = document.querySelector("#timer")
+        const time = timer.querySelector('span')
+        time.innerText = parseInt(time.innerText)+1
     };
 }
 
@@ -147,7 +154,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
       score.innerText = scoreValue
   }
 
-//TODO: refactor this
+    //TODO: refactor this
     if (snakePos.x === tileX && snakePos.y === tileY) {
         //if testNestedArray is 
         if(gameWords[0].length === 0 && gameWords.length === 1){
@@ -171,11 +178,9 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 } 
 
 function clearTiles() {
-    const gamehead = document.querySelector(`#gameHead`)
-    debugger;
-    while (gamehead.firstChild) {
-        gamehead.removeChild(gamehead.firstChild);
-      }
+    while (gameHead.firstChild) {
+        gameHead.removeChild(gameHead.firstChild);
+    }
 }
 
 // doesn't executes if user presses same button in a row.
@@ -210,12 +215,9 @@ let userlistCounter = 0
 form.addEventListener(`submit`,(e) => {
     e.preventDefault();
     const w1 = document.querySelector(`#w1`).value;
-    const w2 = document.querySelector(`#w2`).value;
-    const w3 = document.querySelector(`#w3`).value;
-    const w4 = document.querySelector(`#w4`).value;
-    const w5 = document.querySelector(`#w5`).value;
-    newUserList = [w1,w2,w3,w4,w5];
-    userlistCounter+=1;
+
+    // newUserList = [w1,w2,w3,w4,w5];
+    // userlistCounter+=1;
 })
 
 //construct new list object 
@@ -249,6 +251,7 @@ function loadSelectList(e){
     .then(listObj => {
         loadedList = listObj.words
         grabLetters(loadedList)
+        displayList(loadedList)
     })
     return loadedList
 }
@@ -355,3 +358,12 @@ function spellWord(char) {
 
 // document.querySelector('.tiles').offsetHeight = tileWidth
 
+function displayList(list) {
+    wordList.innerHTML = ''
+    list.forEach(word => {
+        const wordList = document.querySelector('#wordList')
+        const li = document.createElement('li')
+        li.textContent = word
+        wordList.append(li)
+    })
+}

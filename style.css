@@ -15,7 +15,7 @@
     background-color: blueviolet;
 }
 
-#wordlist {
+#wordColumn {
     flex: 0 1 250px;
     height: 600px;
     border: 3px solid #73AD21;
@@ -78,6 +78,7 @@
 
 #scoreboard, #timer {
     background-color: rgba(0, 0, 0, 0.1); 
+    /* filter: drop-shadow(0 5px 4mm black); */
 }
 
 .tiles {
@@ -97,4 +98,21 @@
 .snake {
     background-color: black;
     position: absolute;
+}
+
+input {
+    width: 100px;
+}
+
+@media (max-width: 630px) {
+    #wordColumn {
+        display: none;
+    }
+}
+
+/* media query 800px */
+@media (max-width: 800px) {
+    #settings {
+        display: none;
+    }
 }
