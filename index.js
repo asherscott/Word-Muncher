@@ -6,13 +6,11 @@ const charTile  = document.querySelector('#charTile')
 let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
 const defaultList =['test','test']
-let loadedList;
-let newUserList
-let gameWords
+let loadedList; //list loaded from internal database
+let gameWords //list that will be manipulated in spawnLetter
 let gameOver = false;
-let wordOver = false;
 //TEST VARIABLES//
-const testNestedArray = grabLetters(['hi','yes','ok']);
+//const testNestedArray = grabLetters(['hi','yes','ok']);
 const testChar = 'T'
 
 let intervalId;
@@ -42,7 +40,7 @@ window.onload = function(){
 
 function onStart(){
 // Initializes snake position and size
-    chooseList();
+    // chooseList();
 
     setPosOrSize(snake, 'left', snakePos.x)
     setPosOrSize(snake, 'bottom', snakePos.y)
@@ -56,7 +54,7 @@ function onStart(){
     setInterval(count,1000);
 
 }
-
+/*****Timer*******/
 function count(){
 if(!gameOver) {
     const timer = document.querySelector("#timer")
@@ -65,7 +63,7 @@ if(!gameOver) {
     };
 }
 
-
+////*****SNAKE *******/
 function moveSnake(speed) {
 
     document.addEventListener('keydown', (event) => {
@@ -169,13 +167,16 @@ function move(snakeCoordinate, windowAxis, movePositive) {
         }
     }
 } 
+function addToMunchedList(){
+    const munchedList = document.querySelector(`#munchedList`);
+    const li = document.createElement('li');
+    // li.innerText =
+    munchedList.append(li)
+}
 
 function clearTiles() {
     const gamehead = document.querySelector(`#gameHead`)
-    debugger;
-    while (gamehead.firstChild) {
-        gamehead.removeChild(gamehead.firstChild);
-      }
+   gameHead.innerHTML =""
 }
 
 // doesn't executes if user presses same button in a row.
@@ -201,43 +202,7 @@ function munch(){
  }
 
  /******Word Lists ********/
-
- /////build your own word list/////
-
-const form = document.querySelector(`#new-words`)
-let userlistCounter = 0
-
-form.addEventListener(`submit`,(e) => {
-    e.preventDefault();
-    const w1 = document.querySelector(`#w1`).value;
-    const w2 = document.querySelector(`#w2`).value;
-    const w3 = document.querySelector(`#w3`).value;
-    const w4 = document.querySelector(`#w4`).value;
-    const w5 = document.querySelector(`#w5`).value;
-    newUserList = [w1,w2,w3,w4,w5];
-    userlistCounter+=1;
-})
-
-//construct new list object 
-// function constructUserList(){
-//     if(userlistCounter!== 0) {
-//         const userlist = {
-//          name:"userlist"+userlistCounter,
-//          words:newUserList,
-//      }
-//      return userlist;
-//     }
-//  }
-
-//push object to database
-// fetch(`http://localhost:3000/wordlist`,{
-//     method:`POST`,
-//     headers:{"Content-Type":"application/json",
-//     "Accept":"application/json"},
-//     body:JSON.stringify(constructUserList())
-// })
-
- /////select a wordlist/////
+ /////Internal Database///////////
 const dropdown = document.querySelector(`select`);
 dropdown.addEventListener(`change`,(e) => loadSelectList(e))
 
@@ -253,16 +218,36 @@ function loadSelectList(e){
     return loadedList
 }
 
+ ////external API ////////////
+ function getSyns(inputWord) {
+    fetch(`https://wordsapiv1.p.rapidapi.com/words/${inputWord}/synonyms`, {
+     "method": "GET",
+     "headers": {
+         "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
+         "x-rapidapi-key": "ed0843a013mshf0322f372ebf2e4p1c7f9bjsnfb7909794c3d"
+     }
+ })
+ .then(res => res.json())
+ .then(words => {
+     debugger;
+     grabLetters(words.synonyms)})
+ .catch(err => {
+     console.error(err);
+ });
+ }000
+
 
  /****** Pull Words from Wordlist ********/ 
-
 //grabLetters + makeLettersArray creates a nested array of letters
 function grabLetters(wordsArray){
     //grab word
+    console.log("wordsArray:"+wordsArray)
     const grabLettersArray = []
     for (const word of wordsArray) {
         grabLettersArray.push(makeLetterArray(word))
-      }
+      };
+    gameWords = grabLettersArray;
+    console.log(gameWords);
     return grabLettersArray;
 }
 
@@ -278,9 +263,7 @@ function makeLetterArray(word){
 
 function chooseList(){
     // debugger;
-    if(newUserList){
-        gameWords = grabLetters(newUserList)
-    } else if (loadedList) {
+if (loadedList) {
         gameWords = grabLetters(loadedList)
     } else {
         gameWords = grabLetters(defaultList)
