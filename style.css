@@ -20,6 +20,9 @@
     background-color: black;
     position: absolute;
 }
+#start{
+    background-color: #73AD21;
+}
 #banner {
     text-align: center;
 }

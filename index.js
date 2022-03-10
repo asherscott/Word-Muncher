@@ -2,11 +2,12 @@
 const snake     = document.querySelector('#head')
 const gamespace = document.querySelector(`#gamespace`)
 const charTile  = document.querySelector('#charTile')
-const testNestedArray = grabLetters(['hi','yes','ok']);
-let score = 0
+let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
 let gameOver = false;
 
+//TEST VARIABLES//
+const testNestedArray = grabLetters(['hi','yes','ok']);
 const testChar = 'T'
 
 let intervalId;
@@ -25,21 +26,39 @@ const bounds = {left: 0, right: 480, top: 520, bottom: 0}
 const previousPos = [];     // an array of objects that contain the snakes past coordinates
 
 
-// Initializes snake position and size
-setPosOrSize(snake, 'left', snakePos.x)
-setPosOrSize(snake, 'bottom', snakePos.y)
+window.onload = function(){
+    const startBttn = document.addElement(`div`)
+    startBttn.id = "start"
+    startBttn.innerText = "START"
+    gamespace.append(startBttn);
 
-setPosOrSize(snake, 'width', size)
-setPosOrSize(snake, 'height', size)
+    startBttn.addEventListener(`click`, onStart())
+}
 
 onStart();
 //TODO: add start button
+//everything that needs to happen when start
 
 function onStart(){
+// Initializes snake position and size
+    setPosOrSize(snake, 'left', snakePos.x)
+    setPosOrSize(snake, 'bottom', snakePos.y)
+
+    setPosOrSize(snake, 'width', size)
+    setPosOrSize(snake, 'height', size)
+
     spawnTile(testNestedArray[0].shift())
     moveSnake(intervalSpeed)
-    //everything that needs to happen when start
 
+    setInterval(count,1000);
+}
+
+function count(){
+if(!gameOver) {
+    const timer = document.querySelector("#timer")
+    const time = timer.querySelector('span')
+    time.innerText = parseInt(time.innerText)+1
+    };
 }
 
 
@@ -108,26 +127,39 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     const tileY = parseInt(charTile.style.bottom.replace('px', ''))
 
   function spawnNext(nestedArray) {
+    munch();
+    updateScore()
     spawnTile(nestedArray[0].shift())
     addSnake()
-    console.log(score);
+    console.log("score:"+scoreValue);
+    console.log("nested array length:" +nestedArray[0].length)
+    console.log("array length:" +nestedArray.length)
   }
 
+  function updateScore(){
+      scoreValue+=1
+      const scoreboard = document.querySelector("#scoreboard")
+      const score = scoreboard.querySelector('span')
+      score.innerText = scoreValue
+  }
+
+//TODO: refactor this
     if (snakePos.x === tileX && snakePos.y === tileY) {
         //if testNestedArray is 
-        score += 1;
-        if(testNestedArray.length === 0){
+        if(testNestedArray[0].length === 0 && testNestedArray.length === 1){
+            updateScore()
             gameOver = true;
+            //endGame();
         }
-        if(testNestedArray[0].length===0 && !gameOver) {
-        testNestedArray.shift()
+        else if(testNestedArray[0].length===0 && !gameOver) {
+            testNestedArray.shift()
+            spawnNext(testNestedArray)
+        }
+        else if (!gameOver){
         spawnNext(testNestedArray)
-        } else if (!gameOver){
-        spawnNext(testNestedArray)
-        } else {console.log("game over!")}
+        }
     }
-}
-
+} 
 
 
 // doesn't executes if user presses same button in a row.
@@ -147,7 +179,7 @@ function moveInterval(snakeCoordinate, windowAxis, moveRighty, speed) {
     }
 }
 
-function munch(e){
+function munch(){
     snake.style.backgroundColor = "pink";
     setTimeout(() => snake.style.backgroundColor = "black",500);
  }
@@ -193,7 +225,7 @@ form.addEventListener(`submit`,(e) => {
  /////select a wordlist/////
 const dropdown = document.querySelector(`select`);
 dropdown.addEventListener(`change`,(e) => loadSelectList(e))
-let loadedList
+let loadedList;
 
 function loadSelectList(e){
     const selectedListId = e.target.value;
