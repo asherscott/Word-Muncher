@@ -4,6 +4,10 @@ const gamespace = document.querySelector(`#gamespace`)
 const charTile  = document.querySelector('#charTile')
 let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
+const defaultList =['test','test']
+let loadedList;
+let newUserList
+let gameWords
 let gameOver = false;
 
 //TEST VARIABLES//
@@ -27,30 +31,30 @@ const previousPos = [];     // an array of objects that contain the snakes past 
 
 
 window.onload = function(){
-    const startBttn = document.addElement(`div`)
+    const startBttn = document.createElement(`div`)
     startBttn.id = "start"
     startBttn.innerText = "START"
+    startBttn.addEventListener(`click`, onStart)
     gamespace.append(startBttn);
-
-    startBttn.addEventListener(`click`, onStart())
 }
-
-onStart();
 //TODO: add start button
 //everything that needs to happen when start
 
 function onStart(){
 // Initializes snake position and size
+    chooseList();
+
     setPosOrSize(snake, 'left', snakePos.x)
     setPosOrSize(snake, 'bottom', snakePos.y)
 
     setPosOrSize(snake, 'width', size)
     setPosOrSize(snake, 'height', size)
 
-    spawnTile(testNestedArray[0].shift())
+    spawnTile(gameWords[0].shift())
     moveSnake(intervalSpeed)
 
     setInterval(count,1000);
+
 }
 
 function count(){
@@ -146,17 +150,17 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 //TODO: refactor this
     if (snakePos.x === tileX && snakePos.y === tileY) {
         //if testNestedArray is 
-        if(testNestedArray[0].length === 0 && testNestedArray.length === 1){
+        if(gameWords[0].length === 0 && gameWords.length === 1){
             updateScore()
             gameOver = true;
             //endGame();
         }
-        else if(testNestedArray[0].length===0 && !gameOver) {
-            testNestedArray.shift()
-            spawnNext(testNestedArray)
+        else if(gameWords[0].length===0 && !gameOver) {
+            gameWords.shift()
+            spawnNext(gameWords)
         }
         else if (!gameOver){
-        spawnNext(testNestedArray)
+        spawnNext(gameWords)
         }
     }
 } 
@@ -190,7 +194,6 @@ function munch(){
 
 const form = document.querySelector(`#new-words`)
 let userlistCounter = 0
-let newUserList
 
 form.addEventListener(`submit`,(e) => {
     e.preventDefault();
@@ -225,7 +228,7 @@ form.addEventListener(`submit`,(e) => {
  /////select a wordlist/////
 const dropdown = document.querySelector(`select`);
 dropdown.addEventListener(`change`,(e) => loadSelectList(e))
-let loadedList;
+
 
 function loadSelectList(e){
     const selectedListId = e.target.value;
@@ -257,6 +260,21 @@ function makeLetterArray(word){
     lettersArray.push(letter)
     }
     return lettersArray
+}
+
+////Choose List///////
+
+function chooseList(){
+    debugger;
+    if(newUserList){
+        gameWords = grabLetters(newUserList)
+    } else if (loadedList) {
+        gameWords = grabLetters(loadedList)
+    } else {
+        gameWords = grabLetters(defaultList)
+    }
+    debugger;
+    return gameWords
 }
 
 /******Work Through Array of Words, Spawn Tiles  ********/ 
