@@ -26,6 +26,19 @@
         "trains",
         "postal"
       ]
+    },
+    {
+      "id": 4,
+      "name": "Default",
+      "words": [
+          "The",
+          "Magnificent", 
+          "Word", 
+          "Muncher",
+          "Munches",
+          "Many",
+          "Words"
+      ]
     }
   ]
 }

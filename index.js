@@ -6,7 +6,7 @@ const charTile      = document.querySelector('#charTile')
 const munchedList   = document.querySelector('#munchedList')
 let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
-const defaultList =['magnificent','superDuperLongWord']
+const defaultList = ['The', 'Magnificent', 'Word', 'Muncher', 'Munches', 'Many', 'Words']
 let loadedList;
 let newUserList
 let gameWords
@@ -39,7 +39,9 @@ window.onload = function() {
     gamespace.append(startBttn);
 
     charTile.style.display = 'none'
-    munchedList.style.display = 'none'
+    // munchedList.style.display = 'none'
+
+    displayList(defaultList)
 }
 //TODO: add start button
 //everything that needs to happen when start
@@ -178,10 +180,19 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     }
 } 
 
+function displayMunched(letterArray) {
+    const li = document.createElement('li')
+    li.textContent = letterArray.join('')
+    munchedList.querySelector('ul').append(li)
+}
+
 function clearTiles() {
+    const munchedWord = []
     while (gameHead.firstChild) {
+        munchedWord.push(gameHead.firstChild.textContent)
         gameHead.removeChild(gameHead.firstChild);
     }
+    displayMunched(munchedWord)
 }
 
 // doesn't executes if user presses same button in a row.
