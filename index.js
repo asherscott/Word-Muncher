@@ -143,7 +143,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     updateScore()
     spawnTile(nestedArray[0].shift())
     addSnake()
-    increaseSpeed('normalMode')
+    increaseSpeed(dif)
     
     console.log("score:"+scoreValue);
     console.log("nested array length:" +nestedArray[0].length)
@@ -379,17 +379,23 @@ function displayList(list) {
 
 function increaseSpeed(difficulty) {
     // difficulty modes will probably be changed from strings to variables
-    if(intervalSpeed >= 60 && difficulty === 'normalMode') {
+    if(intervalSpeed >= 60 && difficulty === 'medium') {
         // regular mode --- minimum speed = 60
         intervalSpeed = intervalSpeed / 1.02
-    }else if(intervalSpeed >= 35 && difficulty === 'hardMode') {
+    }else if(intervalSpeed >= 35 && difficulty === 'hard') {
         // hard mode --- minimum speed = 35
         intervalSpeed = intervalSpeed / 1.06
-    }else if(intervalSpeed >= 25 && difficulty === 'insaneMode') {
+    }else if(intervalSpeed >= 25 && difficulty === 'insane') {
         // insane mode --- minimum speed = 25
         intervalSpeed = intervalSpeed / 1.1
     }
-    // if difficulty === easyMode, then do nothing
+    // if difficulty === easy, then do nothing
+}
+const difDropdown = document.querySelector('#difficulty-dropdown')
+difDropdown.addEventListener('change', (event) => chooseDifficulty(event))
 
-    console.log(intervalSpeed)
+let dif = 'easy'
+function chooseDifficulty(event) {
+    dif = event.target.value
+    return dif
 }
