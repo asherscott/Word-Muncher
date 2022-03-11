@@ -7,7 +7,7 @@ const munchedList   = document.querySelector('#munchedList')
 const endscreen     = document.querySelector(`.endgame`)
 let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
-let loadedList; //list loaded from internal database
+let loadedList; //list loaded from database (internal or external API)
 let gameWords //list that will be manipulated in spawnLetter
 const defaultList = ['The', 'Magnificent', 'Word', 'Muncher', 'Munches', 'Many', 'Words']
 let gameOver = false;
@@ -44,19 +44,23 @@ window.onload = function(){
 //everything that needs to happen when start
 
 function onStart(){
-    // chooseList();
-    chooseList();
 
+//loads chosen list 
+    gameWords = grabLetters(loadedList)
+    displayList(loadedList)
+//initializes snake
     setPosOrSize(snake, 'left', snakePos.x)
     setPosOrSize(snake, 'bottom', snakePos.y)
 
     setPosOrSize(snake, 'width', size)
     setPosOrSize(snake, 'height', size)
 
+//spawns initial tile
     charTile.style.display = 'block'
     spawnTile(gameWords[0].shift())
     moveSnake(intervalSpeed)
 
+//initiates timer
     setInterval(count,1000);
 
     // clears WordSpeller on start
@@ -189,7 +193,6 @@ function move(snakeCoordinate, windowAxis, movePositive) {
         else if(gameWords[0].length===0 && !gameOver) {
             gameWords.shift()
             spawnNext(gameWords)
-            //call to function -> populating to munchedList 
             setTimeout(() => clearTiles(),500);
         }
         else if (!gameOver){
@@ -209,6 +212,7 @@ function displayMunched(letterArray) {
     li.textContent = letterArray.join('')
     munchedList.querySelector('ul').append(li)
 }
+
 
 function clearTiles() {
     const munchedWord = []
@@ -250,6 +254,7 @@ const form = document.querySelector(`#new-words`)
 form.addEventListener(`submit`,(e) => {
     e.preventDefault();
     const w1 = document.querySelector(`#w1`).value;
+    getSyns(w1);
 })
 
 
@@ -264,10 +269,8 @@ function loadSelectList(e){
     .then(returnlistJSON => returnlistJSON.json())
     .then(listObj => {
         loadedList = listObj.words
-        grabLetters(loadedList)
-        displayList(loadedList)
     })
-    return loadedList
+    return loadedList;
 }
 
  ////external API ////////////
@@ -281,12 +284,11 @@ function loadSelectList(e){
  })
  .then(res => res.json())
  .then(words => {
-     debugger;
-     grabLetters(words.synonyms)})
+     loadedList = words.synonyms})
  .catch(err => {
      console.error(err);
  });
- }000
+ }
 
 
  /****** Pull Words from Wordlist ********/ 
@@ -297,7 +299,7 @@ function grabLetters(wordsArray){
         grabLettersArray.push(makeLetterArray(word))
       };
     gameWords = grabLettersArray;
-    return grabLettersArray;
+    return gameWords;
 }
 
 function makeLetterArray(word){
@@ -306,18 +308,6 @@ function makeLetterArray(word){
     lettersArray.push(letter)
     }
     return lettersArray
-}
-
-////Choose List///////
-
-function chooseList(){
-    // debugger;
-if (loadedList) {
-        gameWords = grabLetters(loadedList)
-    } else {
-        gameWords = grabLetters(defaultList)
-    }
-    return gameWords
 }
 
 /******Work Through Array of Words, Spawn Tiles  ********/ 
