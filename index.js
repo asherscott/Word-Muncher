@@ -76,7 +76,7 @@ function endGame(){
     const finalTime = document.querySelector("#finalTime","span")
     finalTime.innerText = "TOTAL TIME: "+totalTime;
     const finalDifficulty = document.querySelector("#finalDifficulty","span")
-    finalDifficulty.innerText = "DIFFICULTY: "+dif;
+    finalDifficulty.innerText = "DIFFICULTY: "+dif
 
     charTile.style.display = "none";
 
