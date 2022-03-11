@@ -4,12 +4,14 @@ const gamespace     = document.querySelector(`#gamespace`)
 const gameHead      = document.querySelector('#gameHead')
 const charTile      = document.querySelector('#charTile')
 const munchedList   = document.querySelector('#munchedList')
+const endscreen     = document.querySelector(`.endgame`)
 let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
 let loadedList; //list loaded from internal database
 let gameWords //list that will be manipulated in spawnLetter
 const defaultList = ['The', 'Magnificent', 'Word', 'Muncher', 'Munches', 'Many', 'Words']
 let gameOver = false;
+let dif = 'easy'
 //TEST VARIABLES//
 //const testNestedArray = grabLetters(['hi','yes','ok']);
 const testChar = 'T'
@@ -17,7 +19,7 @@ const testChar = 'T'
 let intervalId;
 let keyTarget;
 let bodyId = 0
-
+let totalTime 
 
 
 const snakePos = {x: 20, y: 240}
@@ -30,6 +32,7 @@ const previousPos = [];
 
 
 window.onload = function(){
+    endscreen.style.display = "none";
     const startBttn = document.querySelector(`#startBttn`)
     startBttn.addEventListener(`click`, onStart)
 
@@ -60,12 +63,23 @@ function onStart(){
     gameHead.innerHTML = ''
 }
 
-if(endGame){endGame()}
 function endGame(){
     //make endscreen visible 
+    endscreen.style.display = "flex"
     //add event listener to playAgain button
-    //clear out "words munched list"
+    const playAgain = document.querySelector("#playAgain")
+    playAgain.addEventListener('submit',() => {});
     //push score/time to scorelist
+    const finalScore = document.querySelector("#finalScore","span") 
+    finalScore.innerText = scoreValue;
+
+    const finalTime = document.querySelector("#finalTime","span")
+    finalTime.innerText = totalTime;
+    const finalDifficulty = document.querySelector("#finalDifficulty","span")
+    finalDifficulty.innerText = dif;
+
+    charTile.style.display = "none";
+
 }
 
 function reload(){
@@ -77,6 +91,8 @@ function count(){
         const timer = document.querySelector("#timer")
         const time = timer.querySelector('span')
         time.innerText = parseInt(time.innerText)+1
+        totalTime = parseInt(time.innerText)
+        return totalTime
     };
 }
 
@@ -166,15 +182,15 @@ function move(snakeCoordinate, windowAxis, movePositive) {
             updateScore()
             munch();
             spellWord(charTile.innerText);
-            clearTiles();
+            setTimeout(() => clearTiles(),500);
             gameOver = true;
-            //endGame();
+            endGame();
         }
         else if(gameWords[0].length===0 && !gameOver) {
             gameWords.shift()
             spawnNext(gameWords)
             //call to function -> populating to munchedList 
-            clearTiles();
+            setTimeout(() => clearTiles(),500);
         }
         else if (!gameOver){
         spawnNext(gameWords)
@@ -230,34 +246,12 @@ function munch(){
  /////build your own word list/////
 
 const form = document.querySelector(`#new-words`)
-let userlistCounter = 0
 
 form.addEventListener(`submit`,(e) => {
     e.preventDefault();
     const w1 = document.querySelector(`#w1`).value;
-
-    // newUserList = [w1,w2,w3,w4,w5];
-    // userlistCounter+=1;
 })
 
-//construct new list object 
-// function constructUserList(){
-//     if(userlistCounter!== 0) {
-//         const userlist = {
-//          name:"userlist"+userlistCounter,
-//          words:newUserList,
-//      }
-//      return userlist;
-//     }
-//  }
-
-//push object to database
-// fetch(`http://localhost:3000/wordlist`,{
-//     method:`POST`,
-//     headers:{"Content-Type":"application/json",
-//     "Accept":"application/json"},
-//     body:JSON.stringify(constructUserList())
-// })
 
  /////select a wordlist/////
 const dropdown = document.querySelector(`select`);
@@ -417,7 +411,7 @@ function increaseSpeed(difficulty) {
 const difDropdown = document.querySelector('#difficulty-dropdown')
 difDropdown.addEventListener('change', (event) => chooseDifficulty(event))
 
-let dif = 'easy'
+
 function chooseDifficulty(event) {
     dif = event.target.value
     return dif

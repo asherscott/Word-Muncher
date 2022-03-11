@@ -54,14 +54,17 @@
                     <div class="tiles">R</div>
                 </div>
                 <div id ="gamespace">
-                    <div id = "scoreboard">SCORE <span>0</span></div>
+                    <div id = "scoreboard">SCORE:<br><span>0</span></div>
+                    <div id = "timer">TIME:<br> <span>0</span></div>
                     <button id ="startBttn">START</button>
-                    <div id = "timer">TIME <span>0</span></div>
                     <div class= "snake" id="head"></div>
                     <div class="tiles" id="charTile"></div>
                     <div class= "endgame">
                         <form class ="endgame" id = "endgame">
-                            <input type ="submit" value = "Play Again!"/>
+                            <div class = "final" id = "finalScore">FINAL SCORE: <span>0</span></div>
+                            <div class = "final" id = "finalTime">TIME: <span>0</span></div>
+                            <div class = "final" id = "finalDifficulty">DIFFICULTY: <span>0</span></div>
+                            <input type ="submit" value = "Play Again!" id ="playAgain"/>
                         </form>
                     </div>
                 </div>
