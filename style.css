@@ -156,17 +156,28 @@ input {
     }
 }
 
+button:hover,  input + input:hover, select:hover {
+    cursor: pointer;
+}
+
 .startBtn {
     transition: transform .2s;
     cursor: pointer;
+    animation: bounce 6s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+      }
 }
 
 .startBtn:hover {
     transform: scale(1.2);
     cursor: pointer;
     filter: drop-shadow(0 0 2px gold)
-}
-
-button:hover,  input + input:hover, select:hover{
-    cursor: pointer;
 }

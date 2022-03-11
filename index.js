@@ -36,7 +36,6 @@ window.onload = function() {
     charTile.style.display = 'none'
 
     displayList(defaultList)
-    fancyStart(startBtns)
 }
 //TODO: add start button
 //everything that needs to happen when start
@@ -422,11 +421,4 @@ let dif = 'easy'
 function chooseDifficulty(event) {
     dif = event.target.value
     return dif
-}
-
-function fancyStart(btns) {
-    const fancyInterval = setInterval(() => {
-        console.log('tt')
-    }, 500)
-    fancyInterval
 }
