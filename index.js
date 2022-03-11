@@ -51,7 +51,7 @@ if(loadedList){
     gameWords = grabLetters(loadedList)
     displayList(loadedList)
 } else {
-    gameWords = grabLetters(defaultList)
+    gameWords = grabLetters([`hi`])
 }
 //initializes snake position
     setPosOrSize(snake, 'left', snakePos.x)
@@ -74,9 +74,11 @@ if(loadedList){
 
 //everything that needs to happen when game ends
 function endGame(){
-    moveSnake(0)
+    clearInterval(intervalId)
     endscreen.style.display = "flex"
-    charTile.style.display = "none";
+    debugger;
+    charTile.remove();
+    debugger;
 
     const playAgain = document.querySelector("#playAgain")
     playAgain.addEventListener('submit',() => {});
@@ -105,8 +107,8 @@ function count(){
 
 ////*****SNAKE *******/
 function moveSnake(speed) {
-
     document.addEventListener('keydown', (event) => {
+        if(!gameOver){
         switch(event.key) {
             case 'ArrowRight':
                 moveInterval('x', 'left', true, speed)
@@ -121,7 +123,8 @@ function moveSnake(speed) {
                 moveInterval('y', 'bottom', false, speed)
                 break;
         }
-    })
+    }
+})
 }
 
 
@@ -195,7 +198,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
         }
         else if(gameWords[0].length===0 && !gameOver) {
             gameWords.shift()
-            setTimeout(() => clearTiles(),3000);
+            setTimeout(() => clearTiles(),700);
             spawnNext(gameWords)
         }
         else if (!gameOver){
