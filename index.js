@@ -1,13 +1,14 @@
 // Global variables here
-const snake     = document.querySelector('#head')
-const gamespace = document.querySelector(`#gamespace`)
-const gameHead  = document.querySelector('#gameHead')
-const charTile  = document.querySelector('#charTile')
+const snake         = document.querySelector('#head')
+const gamespace     = document.querySelector(`#gamespace`)
+const gameHead      = document.querySelector('#gameHead')
+const charTile      = document.querySelector('#charTile')
+const munchedList   = document.querySelector('#munchedList')
 let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
-const defaultList =['test','test']
 let loadedList; //list loaded from internal database
 let gameWords //list that will be manipulated in spawnLetter
+const defaultList = ['The', 'Magnificent', 'Word', 'Muncher', 'Munches', 'Many', 'Words']
 let gameOver = false;
 //TEST VARIABLES//
 //const testNestedArray = grabLetters(['hi','yes','ok']);
@@ -19,9 +20,9 @@ let bodyId = 0
 
 
 
-const snakePos = {x: 0, y: 300}
+const snakePos = {x: 20, y: 240}
 const size = 20
-const intervalSpeed = 100
+let intervalSpeed = 100
 
 const bounds = {min: 0, max: 480}
 const previousPos = [];
@@ -31,13 +32,17 @@ const previousPos = [];
 window.onload = function(){
     const startBttn = document.querySelector(`#startBttn`)
     startBttn.addEventListener(`click`, onStart)
+
+    charTile.style.display = 'none'
+
+    displayList(defaultList)
 }
 //TODO: add start button
 //everything that needs to happen when start
 
 function onStart(){
-// Initializes snake position and size
     // chooseList();
+    chooseList();
 
     setPosOrSize(snake, 'left', snakePos.x)
     setPosOrSize(snake, 'bottom', snakePos.y)
@@ -45,11 +50,14 @@ function onStart(){
     setPosOrSize(snake, 'width', size)
     setPosOrSize(snake, 'height', size)
 
+    charTile.style.display = 'block'
     spawnTile(gameWords[0].shift())
     moveSnake(intervalSpeed)
 
     setInterval(count,1000);
 
+    // clears WordSpeller on start
+    gameHead.innerHTML = ''
 }
 
 if(endGame){endGame()}
@@ -65,10 +73,10 @@ function reload(){
 }
 /*****Timer*******/
 function count(){
-if(!gameOver) {
-    const timer = document.querySelector("#timer")
-    const time = timer.querySelector('span')
-    time.innerText = parseInt(time.innerText)+1
+    if(!gameOver) {
+        const timer = document.querySelector("#timer")
+        const time = timer.querySelector('span')
+        time.innerText = parseInt(time.innerText)+1
     };
 }
 
@@ -141,6 +149,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     updateScore()
     spawnTile(nestedArray[0].shift())
     addSnake()
+    increaseSpeed(dif)
   }
 
   function updateScore(){
@@ -150,7 +159,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
       score.innerText = scoreValue
   }
 
-//TODO: refactor this
+    //TODO: refactor this
     if (snakePos.x === tileX && snakePos.y === tileY) {
         //if testNestedArray is 
         if(gameWords[0].length === 0 && gameWords.length === 1){
@@ -172,16 +181,23 @@ function move(snakeCoordinate, windowAxis, movePositive) {
         }
     }
 } 
-function addToMunchedList(){
-    const munchedList = document.querySelector(`#munchedList`);
-    const li = document.createElement('li');
-    // li.innerText =
-    munchedList.append(li)
+// function addToMunchedList(){
+//     const munchedList = document.querySelector(`#munchedList`);
+//     const li = document.createElement('li');
+//     // li.innerText = 
+//     munchedList.append(li)
+// }
+
+function displayMunched(letterArray) {
+    const li = document.createElement('li')
+    li.textContent = letterArray.join('')
+    munchedList.querySelector('ul').append(li)
 }
 
 function clearTiles() {
-    const gamehead = document.querySelector(`#gameHead`)
    gameHead.innerHTML =""
+    const munchedWord = []
+    displayMunched(munchedWord)
 }
 
 // doesn't executes if user presses same button in a row.
@@ -197,7 +213,7 @@ function moveInterval(snakeCoordinate, windowAxis, movemaxy, speed) {
         keyTarget = event.key
 
         clearInterval(intervalId)
-        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, movemaxy), speed)
+        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, movemaxy), intervalSpeed)
     }
 }
 
@@ -207,7 +223,40 @@ function munch(){
  }
 
  /******Word Lists ********/
- /////Internal Database///////////
+
+ /////build your own word list/////
+
+const form = document.querySelector(`#new-words`)
+let userlistCounter = 0
+
+form.addEventListener(`submit`,(e) => {
+    e.preventDefault();
+    const w1 = document.querySelector(`#w1`).value;
+
+    // newUserList = [w1,w2,w3,w4,w5];
+    // userlistCounter+=1;
+})
+
+//construct new list object 
+// function constructUserList(){
+//     if(userlistCounter!== 0) {
+//         const userlist = {
+//          name:"userlist"+userlistCounter,
+//          words:newUserList,
+//      }
+//      return userlist;
+//     }
+//  }
+
+//push object to database
+// fetch(`http://localhost:3000/wordlist`,{
+//     method:`POST`,
+//     headers:{"Content-Type":"application/json",
+//     "Accept":"application/json"},
+//     body:JSON.stringify(constructUserList())
+// })
+
+ /////select a wordlist/////
 const dropdown = document.querySelector(`select`);
 dropdown.addEventListener(`change`,(e) => loadSelectList(e))
 
@@ -219,6 +268,7 @@ function loadSelectList(e){
     .then(listObj => {
         loadedList = listObj.words
         grabLetters(loadedList)
+        displayList(loadedList)
     })
     return loadedList
 }
@@ -316,21 +366,18 @@ function addSnake() {
     setPosOrSize(snakeBody, 'height', size)
 
     gamespace.append(snakeBody)
-    // debugger;
-
 }
 
 function setPosOrSize(var1, var2, var3) {
     var1.style[var2] = var3 + 'px'
 }
 
-// TODO: When word is done, remove all divs
+
 function spellWord(char) {
     const newTile = document.createElement('div')
     newTile.className = 'tiles'
     newTile.textContent = char
     gameHead.append(newTile)
-
 }
 
 // tile dimensions
@@ -340,3 +387,35 @@ function spellWord(char) {
 
 // document.querySelector('.tiles').offsetHeight = tileWidth
 
+function displayList(list) {
+    const ul = wordList.querySelector('ul')
+    ul.innerHTML =''
+    list.forEach(word => {
+        const li = document.createElement('li')
+        li.textContent = word
+        ul.append(li)
+    })
+}
+
+function increaseSpeed(difficulty) {
+    // difficulty modes will probably be changed from strings to variables
+    if(intervalSpeed >= 60 && difficulty === 'medium') {
+        // regular mode --- minimum speed = 60
+        intervalSpeed = intervalSpeed / 1.02
+    }else if(intervalSpeed >= 35 && difficulty === 'hard') {
+        // hard mode --- minimum speed = 35
+        intervalSpeed = intervalSpeed / 1.06
+    }else if(intervalSpeed >= 25 && difficulty === 'insane') {
+        // insane mode --- minimum speed = 25
+        intervalSpeed = intervalSpeed / 1.1
+    }
+    // if difficulty === easy, then do nothing
+}
+const difDropdown = document.querySelector('#difficulty-dropdown')
+difDropdown.addEventListener('change', (event) => chooseDifficulty(event))
+
+let dif = 'easy'
+function chooseDifficulty(event) {
+    dif = event.target.value
+    return dif
+}

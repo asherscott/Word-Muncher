@@ -12,33 +12,27 @@
         </header>
 
         <div id="body">
-            <div id = "wordlist">
+            <div id = "wordColumn">
                 <form id="new-words">
                     <h4>Build Your Own Wordlist</h4>
-                    <label for="w1"> 1. </label>
-                    <input type="text" name="w1" id="w1" />
-                    <br>
-                    <label for="w2"> 2. </label>
-                    <input type="text" name="w2" id="w2"/>
-                    <br>
-                    <label for="w3"> 3.</label>
-                    <input type="text" name="w3" id="w3" />
-                    <br>
-                    <label for="w4"> 4.</label>
-                    <input type="text" name="w3" id="w4" />
-                    <br>
-                    <label for="w5"> 5.</label>
-                    <input type="text" name="w5" id="w5" />
-                    <br>
+                    <input type="text" name="w1" id="w1" placeholder="Enter a word"/>
+
                     <input type="submit" value="Create" />
                 </form>
-            <label for="select-wordlist" class = "dropdown"><h4>Select a Word List</h4></label>
+                <label for="select-wordlist" class = "dropdown"><h4>Select a Word List</h4></label>
                 <select id="list-dropdown" name="select-wordlist">
+                    <option value="4">Default List</option>
                     <option value="1">4 Letter Words</option>
                     <option value="2">5 Letter Words</option>
                     <option value="3">6 Letter Words</option>
                 </select>
-                <div id = "wordspeller">
+                <div id="wordList">
+                    <h4>Word List</h4>
+                    <ul>
+
+                    </ul>
+                </div>
+                <div id = "munchedList">
                     <h4>Words Munched</h4>
                     <ul id = "munchedList"></ul>
                 </div>
@@ -46,13 +40,18 @@
         
             <div id="gameColumn">
                 <div id="gameHead">
-                    <div class="tiles">T</div>  
-                    <div class="tiles">E</div>
-                    <div class="tiles">S</div>
-                    <div class="tiles">T</div>
-                    <div class="tiles">I</div>
+                    <div class="tiles">W</div>  
+                    <div class="tiles">O</div>
+                    <div class="tiles">R</div>
+                    <div class="tiles">D</div>
+                    <div class="tiles"> </div>
+                    <div class="tiles">M</div>
+                    <div class="tiles">U</div>
                     <div class="tiles">N</div>
-                    <div class="tiles">G</div>
+                    <div class="tiles">C</div>
+                    <div class="tiles">H</div>
+                    <div class="tiles">E</div>
+                    <div class="tiles">R</div>
                 </div>
                 <div id ="gamespace">
                     <div id = "scoreboard">SCORE <span>0</span></div>
@@ -77,10 +76,13 @@
                     <button class = "button" id = "theme3">Theme 3</button>
                 </div>
                 <div id = "difficulty">
-                    <h4>Difficulty</h4>
-                    <button class = "button" id = "easy">Easy</button>
-                    <button class = "button" id = "medium">Medium</button>
-                    <button class = "button" id = "hard">Hard</button>
+                    <label for="select-difficulty" class = "dropdown"><h4>Difficulty</h4></label>
+                    <select id="difficulty-dropdown" name="select-difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="insane">Insane</option>
+                    </select>
                 </div>
             </div>
         </div>
