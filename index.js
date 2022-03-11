@@ -71,12 +71,12 @@ function endGame(){
     playAgain.addEventListener('submit',() => {});
     //push score/time to scorelist
     const finalScore = document.querySelector("#finalScore","span") 
-    finalScore.innerText = "FINAL SCORE: "+scoreValue;
+    finalScore.innerText = scoreValue+" letters munched!";
 
     const finalTime = document.querySelector("#finalTime","span")
-    finalTime.innerText = "TOTAL TIME: "+totalTime;
+    finalTime.innerText = "in "+totalTime+" seconds";
     const finalDifficulty = document.querySelector("#finalDifficulty","span")
-    finalDifficulty.innerText = "DIFFICULTY: "+dif
+    finalDifficulty.innerText = "Great job on "+dif+"!"
 
     charTile.style.display = "none";
 

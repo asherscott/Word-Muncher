@@ -95,7 +95,9 @@
   float:right;
     background-color: rgb(255 199 73); 
 }
-
+li{
+text-align:left;
+}
 .tiles {
     border: 2px solid black;
     flex: 0 1 50px;
