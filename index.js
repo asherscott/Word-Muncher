@@ -5,13 +5,15 @@ const gameHead      = document.querySelector('#gameHead')
 const charTile      = document.querySelector('#charTile')
 const munchedList   = document.querySelector('#munchedList')
 const endscreen     = document.querySelector(`.endgame`)
-let scoreValue = 0
-//TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
+
 let loadedList; //list loaded from database (internal or external API)
 let gameWords //list that will be manipulated in spawnLetter
+
 const defaultList = ['The', 'Magnificent', 'Word', 'Muncher', 'Munches', 'Many', 'Words']
 let gameOver = false;
 let dif = 'easy'
+let scoreValue = 0
+let totalTime 
 //TEST VARIABLES//
 //const testNestedArray = grabLetters(['hi','yes','ok']);
 const testChar = 'T'
@@ -19,7 +21,7 @@ const testChar = 'T'
 let intervalId;
 let keyTarget;
 let bodyId = 0
-let totalTime 
+
 
 
 const snakePos = {x: 20, y: 240}
@@ -30,7 +32,7 @@ const bounds = {min: 0, max: 480}
 const previousPos = [];
 
 
-
+/*****GAME INITIALIZATION AND ENDING SCREEN*******/
 window.onload = function(){
     endscreen.style.display = "none";
     const startBttn = document.querySelector(`#startBttn`)
@@ -40,15 +42,18 @@ window.onload = function(){
 
     displayList(defaultList)
 }
-//TODO: add start button
-//everything that needs to happen when start
 
+//everything that needs to happen when start
 function onStart(){
 
-//loads chosen list 
+//loads chosen list or default list if nothing is chosen
+if(loadedList){
     gameWords = grabLetters(loadedList)
     displayList(loadedList)
-//initializes snake
+} else {
+    gameWords = grabLetters(defaultList)
+}
+//initializes snake position
     setPosOrSize(snake, 'left', snakePos.x)
     setPosOrSize(snake, 'bottom', snakePos.y)
 
@@ -67,28 +72,26 @@ function onStart(){
     gameHead.innerHTML = ''
 }
 
+//everything that needs to happen when game ends
 function endGame(){
-    //make endscreen visible 
+    moveSnake(0)
     endscreen.style.display = "flex"
-    //add event listener to playAgain button
+    charTile.style.display = "none";
+
     const playAgain = document.querySelector("#playAgain")
     playAgain.addEventListener('submit',() => {});
-    //push score/time to scorelist
+
     const finalScore = document.querySelector("#finalScore","span") 
     finalScore.innerText = scoreValue+" letters munched!";
 
     const finalTime = document.querySelector("#finalTime","span")
-    finalTime.innerText = "in "+totalTime+" seconds";
+    finalTime.innerText = "in "+totalTime+" seconds!";
+
     const finalDifficulty = document.querySelector("#finalDifficulty","span")
     finalDifficulty.innerText = "Great job on "+dif+"!"
 
-    charTile.style.display = "none";
-
 }
 
-function reload(){
-
-}
 /*****Timer*******/
 function count(){
     if(!gameOver) {
@@ -165,7 +168,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
   function spawnNext(nestedArray) {
     spellWord(charTile.innerText);
     // const poppedLetter = 
-    munch();
+    munchFlash();
     updateScore()
     spawnTile(nestedArray[0].shift())
     addSnake()
@@ -183,11 +186,11 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     if (snakePos.x === tileX && snakePos.y === tileY) {
         //if testNestedArray is 
         if(gameWords[0].length === 0 && gameWords.length === 1){
+            gameOver = true;
             updateScore()
-            munch();
+            munchFlash();
             spellWord(charTile.innerText);
             setTimeout(() => clearTiles(),500);
-            gameOver = true;
             endGame();
         }
         else if(gameWords[0].length===0 && !gameOver) {
@@ -200,12 +203,14 @@ function move(snakeCoordinate, windowAxis, movePositive) {
         }
     }
 } 
-// function addToMunchedList(){
-//     const munchedList = document.querySelector(`#munchedList`);
-//     const li = document.createElement('li');
-//     // li.innerText = 
-//     munchedList.append(li)
-// }
+
+
+
+/**********Update Display Based on Munched **********/
+function munchFlash(){
+    snake.style.backgroundColor = "pink";
+    setTimeout(() => snake.style.backgroundColor = "black",500);
+ }
 
 function displayMunched(letterArray) {
     const li = document.createElement('li')
@@ -215,12 +220,14 @@ function displayMunched(letterArray) {
 
 
 function clearTiles() {
+    if(!gameOver){
     const munchedWord = []
     while (gameHead.firstChild) {
         munchedWord.push(gameHead.firstChild.textContent)
         gameHead.removeChild(gameHead.firstChild);
     }
     displayMunched(munchedWord)
+    }
 }
 
 // doesn't executes if user presses same button in a row.
@@ -240,40 +247,19 @@ function moveInterval(snakeCoordinate, windowAxis, movemaxy, speed) {
     }
 }
 
-function munch(){
-    snake.style.backgroundColor = "pink";
-    setTimeout(() => snake.style.backgroundColor = "black",500);
- }
-
  /******Word Lists ********/
 
- /////build your own word list/////
+ /////Synonym Toast Munch/////
 
-const form = document.querySelector(`#new-words`)
+const wordForm = document.querySelector(`#new-words`)
 
-form.addEventListener(`submit`,(e) => {
+wordForm.addEventListener(`submit`,(e) => {
     e.preventDefault();
-    const w1 = document.querySelector(`#w1`).value;
-    getSyns(w1);
+    const enteredWord = document.querySelector(`#w1`).value;
+    getSyns(enteredWord);
 })
 
-
- /////select a wordlist/////
-const dropdown = document.querySelector(`select`);
-dropdown.addEventListener(`change`,(e) => loadSelectList(e))
-
-
-function loadSelectList(e){
-    const selectedListId = e.target.value;
-    fetch(`http://localhost:3000/wordlist/${selectedListId}`)
-    .then(returnlistJSON => returnlistJSON.json())
-    .then(listObj => {
-        loadedList = listObj.words
-    })
-    return loadedList;
-}
-
- ////external API ////////////
+ ////access Words API to get synonyms ////////////
  function getSyns(inputWord) {
     fetch(`https://wordsapiv1.p.rapidapi.com/words/${inputWord}/synonyms`, {
      "method": "GET",
@@ -290,8 +276,21 @@ function loadSelectList(e){
  });
  }
 
+ /////Select a Word List/////
+const dropdown = document.querySelector(`select`);
+dropdown.addEventListener(`change`,(e) => loadSelectList(e))
 
- /****** Pull Words from Wordlist ********/ 
+function loadSelectList(e){
+    const selectedListId = e.target.value;
+    fetch(`http://localhost:3000/wordlist/${selectedListId}`)
+    .then(returnlistJSON => returnlistJSON.json())
+    .then(listObj => {
+        loadedList = listObj.words
+    })
+    return loadedList;
+}
+
+ /****** Pull Words from loadedList ********/ 
 //grabLetters + makeLettersArray creates a nested array of letters
 function grabLetters(wordsArray){
     const grabLettersArray = []
