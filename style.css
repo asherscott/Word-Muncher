@@ -9,10 +9,12 @@
 }
 
 #banner {
-    text-align: center;
     width: 100%;
-    height: 80px;
+    height: 120px;
     background-color: blueviolet;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #wordColumn {
@@ -26,10 +28,6 @@
     display: flex;
     flex-flow: column wrap;
     flex: 0 0 500px;
-}
-#startBttn{
-    position:relative;
-    background-color: #73AD21;
 }
 
 #gameHead {
@@ -103,17 +101,17 @@
 
 #endgame{
 display:block;
-   background-color:chartreuse;
-   position: relative;
-   height:400px;
-   width:500px;
-   border: 1px dashed #996;
-   background-color: rgb(62, 136, 136);
-   opacity: 0.5;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  padding: 70px 0;
+    background-color:chartreuse;
+    position: relative;
+    height:400px;
+    width:500px;
+    border: 1px dashed #996;
+    background-color: rgb(62, 136, 136);
+    opacity: 0.5;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding: 70px 0;
 }
 
 input {
@@ -121,15 +119,54 @@ input {
     width: 100px;
 }
 
+#banner > div {
+    flex: 0 1 70px;
+    height: 70px;
+    font-size: 40px;
+    margin: 4px;
+    transition: transform .5s;
+}
+
+#banner > div:hover {
+    transform: scale(1.3);
+}
+
 @media (max-width: 630px) {
     #wordColumn {
         display: none;
     }
+
+    #banner > div {
+        font-size: 30px;
+        margin: 2px;
+        height: 60px;
+    }
+
+    #banner {
+        height: 90px;
+    }
+    #gameHead {
+        flex: 0 0 70px;
+    }
 }
 
-/* media query 800px */
 @media (max-width: 800px) {
     #settings {
         display: none;
     }
+}
+
+.startBtn {
+    transition: transform .2s;
+    cursor: pointer;
+}
+
+.startBtn:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+    filter: drop-shadow(0 0 2px gold)
+}
+
+button:hover,  input + input:hover, select:hover{
+    cursor: pointer;
 }

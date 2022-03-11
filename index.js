@@ -29,13 +29,14 @@ const previousPos = [];
 
 
 
-window.onload = function(){
-    const startBttn = document.querySelector(`#startBttn`)
-    startBttn.addEventListener(`click`, onStart)
+window.onload = function() {
+    const startBtns = gameHead.querySelectorAll('.startBtn')
+    startBtns.forEach(btn => btn.addEventListener(`click`, onStart)) 
 
     charTile.style.display = 'none'
 
     displayList(defaultList)
+    fancyStart(startBtns)
 }
 //TODO: add start button
 //everything that needs to happen when start
@@ -421,4 +422,11 @@ let dif = 'easy'
 function chooseDifficulty(event) {
     dif = event.target.value
     return dif
+}
+
+function fancyStart(btns) {
+    const fancyInterval = setInterval(() => {
+        console.log('tt')
+    }, 500)
+    fancyInterval
 }
