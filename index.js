@@ -14,15 +14,10 @@ let gameOver = false;
 let dif = 'easy'
 let scoreValue = 0
 let totalTime 
-//TEST VARIABLES//
-//const testNestedArray = grabLetters(['hi','yes','ok']);
-const testChar = 'T'
 
 let intervalId;
 let keyTarget;
 let bodyId = 0
-
-
 
 const snakePos = {x: 20, y: 240}
 const size = 20
@@ -35,14 +30,47 @@ const previousPos = [];
 
 window.onload = function() {
     endscreen.style.display = "none";
+    charTile.style.display = 'none'
+
     const startBtns = gameHead.querySelectorAll('.startBtn')
     startBtns.forEach(btn => btn.addEventListener(`click`, onStart)) 
 
-    charTile.style.display = 'none'
-
     displayList(defaultList)
+
+    const themeDropdown = document.querySelector('#theme-dropdown')
+    themeDropdown.addEventListener('change', (event) => chooseTheme(event))
+
+    const difDropdown = document.querySelector('#difficulty-dropdown')
+    difDropdown.addEventListener('change', (event) => chooseDifficulty(event))
 }
 
+/*****Settings Menu *******/
+function increaseSpeed(difficulty) {
+    // difficulty modes will probably be changed from strings to variables
+    if(intervalSpeed >= 60 && difficulty === 'medium') {
+        // regular mode --- minimum speed = 60
+        intervalSpeed = intervalSpeed / 1.02
+    }else if(intervalSpeed >= 35 && difficulty === 'hard') {
+        // hard mode --- minimum speed = 35
+        intervalSpeed = intervalSpeed / 1.06
+    }else if(intervalSpeed >= 25 && difficulty === 'insane') {
+        // insane mode --- minimum speed = 25
+        intervalSpeed = intervalSpeed / 1.1
+    }
+    // if difficulty === easy, then do nothing
+}
+
+function chooseDifficulty(event) {
+    dif = event.target.value
+    return dif
+}
+
+function chooseTheme(event) {
+    const theme = event.target.value
+    const style = document.querySelector("#style");
+    style.href = `${theme}.css`
+    debugger;
+}
 //everything that needs to happen when start
 function onStart(){
 
@@ -68,13 +96,14 @@ if(loadedList){
 //initiates timer
     setInterval(count,1000);
 
-    // clears WordSpeller on start
+// clears WordSpeller on start
     gameHead.innerHTML = ''
 }
 
 //everything that needs to happen when game ends
 function endGame(){
     clearInterval(intervalId)
+
     endscreen.style.display = "flex"
     charTile.remove();
 
@@ -92,16 +121,72 @@ function endGame(){
 
 }
 
-/*****Timer*******/
-function count(){
-    if(!gameOver) {
-        const timer = document.querySelector("#timer")
-        const time = timer.querySelector('span')
-        time.innerText = parseInt(time.innerText)+1
-        totalTime = parseInt(time.innerText)
-        return totalTime
-    };
-}
+/********GamePlay Features*******/
+ /******Word Lists ********/
+
+ /////Synonym Toast Munch/////
+
+ const wordForm = document.querySelector(`#new-words`)
+
+ wordForm.addEventListener(`submit`,(e) => {
+     e.preventDefault();
+     const enteredWord = document.querySelector(`#w1`).value;
+     getSyns(enteredWord);
+ })
+ 
+  ////access Words API to get synonyms ////////
+  function getSyns(inputWord) {
+     fetch(`https://wordsapiv1.p.rapidapi.com/words/${inputWord}/synonyms`, {
+      "method": "GET",
+      "headers": {
+          "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
+          "x-rapidapi-key": "ed0843a013mshf0322f372ebf2e4p1c7f9bjsnfb7909794c3d"
+      }
+  })
+  .then(res => res.json())
+  .then(words => {
+      loadedList = words.synonyms
+      displayList(loadedList)})
+  .catch(err => {
+      console.error(err);
+  });
+  }
+ 
+  /////Select a Word List (Dropdown)/////
+ const dropdown = document.querySelector(`select`);
+ dropdown.addEventListener(`change`,(e) => loadSelectList(e))
+ 
+ function loadSelectList(e){
+     const selectedListId = e.target.value;
+     fetch(`http://localhost:3000/wordlist/${selectedListId}`)
+     .then(returnlistJSON => returnlistJSON.json())
+     .then(listObj => {
+         loadedList = listObj.words
+         displayList(loadedList)
+     })
+     return loadedList;
+ }
+ 
+  /****** Pull Words from loadedList ********/ 
+ //grabLetters + makeLettersArray creates a nested array of letters
+ function grabLetters(wordsArray){
+     const grabLettersArray = []
+     for (const word of wordsArray) {
+         grabLettersArray.push(makeLetterArray(word))
+       };
+     gameWords = grabLettersArray;
+     return gameWords;
+ }
+ 
+ function makeLetterArray(word){
+     const lettersArray = []
+     for(letter of word){
+     lettersArray.push(letter)
+     }
+     return lettersArray
+ }
+ 
+/*****Score, Timer Display*******/
 
 ////*****SNAKE *******/
 function moveSnake(speed) {
@@ -124,7 +209,6 @@ function moveSnake(speed) {
     }
 })
 }
-
 
 // movePositive = determines the direction along windowAxis the snake will move. up/down, left/max
 function move(snakeCoordinate, windowAxis, movePositive) {
@@ -166,25 +250,8 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     const tileX = parseInt(charTile.style.left.replace('px', ''))
     const tileY = parseInt(charTile.style.bottom.replace('px', ''))
 
-  function spawnNext(nestedArray) {
-    spellWord(charTile.innerText);
-    // const poppedLetter = 
-    munchFlash();
-    updateScore()
-    spawnTile(nestedArray[0].shift())
-    addSnake()
-    increaseSpeed(dif)
-  }
-
-  function updateScore(){
-      scoreValue+=1
-      const scoreboard = document.querySelector("#scoreboard")
-      const score = scoreboard.querySelector('span')
-      score.innerText = scoreValue
-  }
-
-    //TODO: refactor this
-    if (snakePos.x === tileX && snakePos.y === tileY) {
+function munch(snakeX,snakeY,tileX,tileY){
+    if (snakeX === tileX && snakeY === tileY) {
         //if testNestedArray is 
         if(gameWords[0].length === 0 && gameWords.length === 1){
             gameOver = true;
@@ -203,40 +270,11 @@ function move(snakeCoordinate, windowAxis, movePositive) {
         spawnNext(gameWords)
         }
     }
+}
+
+munch(snakePos.x,snakePos.y,tileX,tileY)
 } 
 
-
-
-/**********Update Display Based on Munched **********/
-function munchFlash(){
-    snake.style.backgroundColor = "pink";
-    setTimeout(() => snake.style.backgroundColor = "black",500);
- }
-
-function displayMunched(letterArray) {
-    const li = document.createElement('li')
-    li.textContent = letterArray.join('')
-    munchedList.querySelector('ul').append(li)
-}
-
-
-function clearTiles() {
-    const munchedWord = []
-    while (gameHead.firstChild) {
-        munchedWord.push(gameHead.firstChild.textContent)
-        gameHead.removeChild(gameHead.firstChild);
-    }
-    displayMunched(munchedWord)
-}
-
-// doesn't executes if user presses same button in a row.
-// Ex: repeatedly press ArrowDown then Arrowmax super quick. 
-// You'll notice the snake moves more slowly, because you're 
-// rapidly clearing and restarting the interval. if statement's 
-// purpose is to limit that sluggish movement when spamming one key
-
-// clearing and restarting the interval is needed to prevent 
-// multiple intervals from existing at once, which screws stuff up.
 function moveInterval(snakeCoordinate, windowAxis, movemaxy, speed) {
     if(keyTarget !== event.key) {   
         keyTarget = event.key
@@ -245,88 +283,59 @@ function moveInterval(snakeCoordinate, windowAxis, movemaxy, speed) {
         intervalId = setInterval(() => move(snakeCoordinate, windowAxis, movemaxy), intervalSpeed)
     }
 }
+/**********Rendering, Updating Display **********/
+function count(){
+    if(!gameOver) {
+        const timer = document.querySelector("#timer")
+        const time = timer.querySelector('span')
+        time.innerText = parseInt(time.innerText)+1
+        totalTime = parseInt(time.innerText)
+        return totalTime
+    };
+}
 
- /******Word Lists ********/
+function spawnNext(nestedArray) {
+    spellWord(charTile.innerText);
+    // const poppedLetter = 
+    munchFlash();
+    updateScore()
+    spawnTile(nestedArray[0].shift())
+    addSnake()
+    increaseSpeed(dif)
+  }
 
- /////Synonym Toast Munch/////
+function updateScore(){
+      scoreValue+=1
+      const scoreboard = document.querySelector("#scoreboard")
+      const score = scoreboard.querySelector('span')
+      score.innerText = scoreValue
+  }
 
-const wordForm = document.querySelector(`#new-words`)
-
-wordForm.addEventListener(`submit`,(e) => {
-    e.preventDefault();
-    const enteredWord = document.querySelector(`#w1`).value;
-    getSyns(enteredWord);
-})
-
- ////access Words API to get synonyms ////////////
- function getSyns(inputWord) {
-    fetch(`https://wordsapiv1.p.rapidapi.com/words/${inputWord}/synonyms`, {
-     "method": "GET",
-     "headers": {
-         "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
-         "x-rapidapi-key": "ed0843a013mshf0322f372ebf2e4p1c7f9bjsnfb7909794c3d"
-     }
- })
- .then(res => res.json())
- .then(words => {
-     loadedList = words.synonyms
-     displayList(loadedList)})
- .catch(err => {
-     console.error(err);
- });
+function munchFlash(){
+    snake.style.backgroundColor = "pink";
+    setTimeout(() => snake.style.backgroundColor = "black",500);
  }
 
- /////Select a Word List/////
-const dropdown = document.querySelector(`select`);
-dropdown.addEventListener(`change`,(e) => loadSelectList(e))
-
-function loadSelectList(e){
-    const selectedListId = e.target.value;
-    fetch(`http://localhost:3000/wordlist/${selectedListId}`)
-    .then(returnlistJSON => returnlistJSON.json())
-    .then(listObj => {
-        loadedList = listObj.words
-        displayList(loadedList)
-    })
-    return loadedList;
+function displayMunchedList(letterArray) {
+    const li = document.createElement('li')
+    li.textContent = letterArray.join('')
+    munchedList.querySelector('ul').append(li)
 }
 
- /****** Pull Words from loadedList ********/ 
-//grabLetters + makeLettersArray creates a nested array of letters
-function grabLetters(wordsArray){
-    const grabLettersArray = []
-    for (const word of wordsArray) {
-        grabLettersArray.push(makeLetterArray(word))
-      };
-    gameWords = grabLettersArray;
-    return gameWords;
-}
-
-function makeLetterArray(word){
-    const lettersArray = []
-    for(letter of word){
-    lettersArray.push(letter)
+function clearTiles() {
+    const munchedWord = []
+    while (gameHead.firstChild) {
+        munchedWord.push(gameHead.firstChild.textContent)
+        gameHead.removeChild(gameHead.firstChild);
     }
-    return lettersArray
+    displayMunchedList(munchedWord)
 }
-
-/******Work Through Array of Words, Spawn Tiles  ********/ 
 
 // TODO: (spawn location !== snake location)
 function spawnTile(char) {
 
     // generates a random number between 0 and gamebounds, that is divisable by snake size (spawns on grid)
-    let randSpawn = (range) => {
-        const snakeBodyArray = Array.from(document.querySelectorAll('.snake'))
-
-        const randNum = (Math.floor(Math.random() * (range / size + 1))) * size
-        
-        // snakeBodyArray.forEach(snakePart => {
-        //     if(randNum === (parseInt(snakePart.style.left.replace('px', '')) || parseInt(snakePart.style.bottom.replace('px', '')))) {
-        //         randSpawn(range)
-        // })
-        return randNum
-    }
+    let randSpawn = (range) => (Math.floor(Math.random() * (range / size + 1))) * size
 
     charTile.textContent = char
     // set div dimensions
@@ -336,10 +345,8 @@ function spawnTile(char) {
     setPosOrSize(charTile, 'left', randSpawn(bounds.max))
     setPosOrSize(charTile, 'bottom', randSpawn(bounds.max))
 
-    // console.log(randSpawn(bounds.max), randSpawn(bounds.top), charTile)
     gamespace.append(charTile)
 }
-
 
 function addSnake() {
     const snakeBody = document.createElement('div')
@@ -359,20 +366,12 @@ function setPosOrSize(var1, var2, var3) {
     var1.style[var2] = var3 + 'px'
 }
 
-
 function spellWord(char) {
     const newTile = document.createElement('div')
     newTile.className = 'tiles'
     newTile.textContent = char
     gameHead.append(newTile)
 }
-
-// tile dimensions
-
-// const tileWidth = document.querySelector('.tiles').offsetWidth
-// let tileHeight = document.querySelector('.tiles').offsetHeight
-
-// document.querySelector('.tiles').offsetHeight = tileWidth
 
 function displayList(list) {
     const ul = wordList.querySelector('ul')
@@ -383,37 +382,5 @@ function displayList(list) {
         ul.append(li)
     })
 }
-/*****Settings Menu *******/
-function increaseSpeed(difficulty) {
-    // difficulty modes will probably be changed from strings to variables
-    if(intervalSpeed >= 60 && difficulty === 'medium') {
-        // regular mode --- minimum speed = 60
-        intervalSpeed = intervalSpeed / 1.02
-    }else if(intervalSpeed >= 35 && difficulty === 'hard') {
-        // hard mode --- minimum speed = 35
-        intervalSpeed = intervalSpeed / 1.06
-    }else if(intervalSpeed >= 25 && difficulty === 'insane') {
-        // insane mode --- minimum speed = 25
-        intervalSpeed = intervalSpeed / 1.1
-    }
-    // if difficulty === easy, then do nothing
-}
-const difDropdown = document.querySelector('#difficulty-dropdown')
-difDropdown.addEventListener('change', (event) => chooseDifficulty(event))
 
 
-function chooseDifficulty(event) {
-    dif = event.target.value
-    return dif
-}
-
-const themeDropdown = document.querySelector('#theme-dropdown')
-themeDropdown.addEventListener('change', (event) => chooseTheme(event))
-
-
-function chooseTheme(event) {
-    const theme = event.target.value
-    const style = document.querySelector("#style");
-    style.href = `${theme}.css`
-    debugger;
-}
