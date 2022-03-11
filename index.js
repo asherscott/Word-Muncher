@@ -190,13 +190,13 @@ function move(snakeCoordinate, windowAxis, movePositive) {
             updateScore()
             munchFlash();
             spellWord(charTile.innerText);
-            setTimeout(() => clearTiles(),500);
+            setTimeout(() => clearTiles(),700);
             endGame();
         }
         else if(gameWords[0].length===0 && !gameOver) {
             gameWords.shift()
+            setTimeout(() => clearTiles(),3000);
             spawnNext(gameWords)
-            setTimeout(() => clearTiles(),500);
         }
         else if (!gameOver){
         spawnNext(gameWords)
@@ -220,14 +220,12 @@ function displayMunched(letterArray) {
 
 
 function clearTiles() {
-    if(!gameOver){
     const munchedWord = []
     while (gameHead.firstChild) {
         munchedWord.push(gameHead.firstChild.textContent)
         gameHead.removeChild(gameHead.firstChild);
     }
     displayMunched(munchedWord)
-    }
 }
 
 // doesn't executes if user presses same button in a row.

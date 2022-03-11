@@ -133,6 +133,7 @@ text-align:left;
     background-color: rgb(180 105 204);
     opacity: 0.75;
     padding: 70px 0;
+    z-index:7;
  }
 
 .final{
