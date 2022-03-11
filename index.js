@@ -6,7 +6,7 @@ const charTile      = document.querySelector('#charTile')
 const munchedList   = document.querySelector('#munchedList')
 let scoreValue = 0
 //TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
-const defaultList =['test','test']
+const defaultList =['magnificent','superDuperLongWord']
 let loadedList;
 let newUserList
 let gameWords
@@ -22,9 +22,9 @@ let bodyId = 0
 
 
 
-const snakePos = {x: 0, y: 300}
+const snakePos = {x: 20, y: 240}
 const size = 20
-const intervalSpeed = 100
+let intervalSpeed = 100
 
 const bounds = {min: 0, max: 480}
 const previousPos = [];
@@ -45,7 +45,6 @@ window.onload = function() {
 //everything that needs to happen when start
 
 function onStart(){
-// Initializes snake position and size
     chooseList();
 
     setPosOrSize(snake, 'left', snakePos.x)
@@ -142,6 +141,8 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     updateScore()
     spawnTile(nestedArray[0].shift())
     addSnake()
+    increaseSpeed('normalMode')
+    
     console.log("score:"+scoreValue);
     console.log("nested array length:" +nestedArray[0].length)
     console.log("array length:" +nestedArray.length)
@@ -196,7 +197,7 @@ function moveInterval(snakeCoordinate, windowAxis, movemaxy, speed) {
         keyTarget = event.key
 
         clearInterval(intervalId)
-        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, movemaxy), speed)
+        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, movemaxy), intervalSpeed)
     }
 }
 
@@ -363,4 +364,21 @@ function displayList(list) {
         li.textContent = word
         ul.append(li)
     })
+}
+
+function increaseSpeed(difficulty) {
+    // difficulty modes will probably be changed from strings to variables
+    if(intervalSpeed >= 60 && difficulty === 'normalMode') {
+        // regular mode --- minimum speed = 60
+        intervalSpeed = intervalSpeed / 1.02
+    }else if(intervalSpeed >= 35 && difficulty === 'hardMode') {
+        // hard mode --- minimum speed = 35
+        intervalSpeed = intervalSpeed / 1.06
+    }else if(intervalSpeed >= 25 && difficulty === 'insaneMode') {
+        // insane mode --- minimum speed = 25
+        intervalSpeed = intervalSpeed / 1.1
+    }
+    // if difficulty === easyMode, then do nothing
+
+    console.log(intervalSpeed)
 }
