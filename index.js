@@ -383,7 +383,7 @@ function displayList(list) {
         ul.append(li)
     })
 }
-
+/*****Settings Menu *******/
 function increaseSpeed(difficulty) {
     // difficulty modes will probably be changed from strings to variables
     if(intervalSpeed >= 60 && difficulty === 'medium') {
@@ -405,4 +405,14 @@ difDropdown.addEventListener('change', (event) => chooseDifficulty(event))
 function chooseDifficulty(event) {
     dif = event.target.value
     return dif
+}
+const themeDropdown = document.querySelector('#theme-dropdown')
+themeDropdown.addEventListener('change', (event) => chooseTheme(event))
+
+
+function chooseTheme(event) {
+    const theme = event.target.value
+    const style = document.querySelector("#style");
+    style.href = `${theme}.css`
+    debugger;
 }

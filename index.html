@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Word Muncher</title>
-        <link rel="stylesheet" href="allison-style.css">
+        <link id = "style" rel="stylesheet" href="allison-style.css">
         <script defer rel="js" src="index.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,9 +80,11 @@
                 <h4>Settings Menu</h4>
                 <div id = "themes">
                     <h4>Change Theme</h4>
-                    <button class = "button" id = "theme1">Theme 1</button>
-                    <button class = "button" id = "theme2">Theme 2</button>
-                    <button class = "button" id = "theme3">Theme 3</button>
+                    <select id="theme-dropdown" name="select-theme">
+                    <option value = "allison-style">Theme 1</option>
+                    <option value = "style">Theme 2</option>
+                    <option value = "theme3">Theme 3</option>
+                </select>
                 </div>
                 <div id = "difficulty">
                     <label for="select-difficulty" class = "dropdown"><h4>Difficulty</h4></label>
