@@ -41,7 +41,6 @@ window.onload = function() {
     charTile.style.display = 'none'
 
     displayList(defaultList)
-    // fancyStart(startBtns)
 }
 
 //everything that needs to happen when start
@@ -52,7 +51,7 @@ if(loadedList){
     gameWords = grabLetters(loadedList)
     displayList(loadedList)
 } else {
-    gameWords = grabLetters([`hi`])
+    gameWords = grabLetters(defaultList)
 }
 //initializes snake position
     setPosOrSize(snake, 'left', snakePos.x)
@@ -270,7 +269,8 @@ wordForm.addEventListener(`submit`,(e) => {
  })
  .then(res => res.json())
  .then(words => {
-     loadedList = words.synonyms})
+     loadedList = words.synonyms
+     displayList(loadedList)})
  .catch(err => {
      console.error(err);
  });
@@ -286,6 +286,7 @@ function loadSelectList(e){
     .then(returnlistJSON => returnlistJSON.json())
     .then(listObj => {
         loadedList = listObj.words
+        displayList(loadedList)
     })
     return loadedList;
 }
@@ -406,12 +407,6 @@ function chooseDifficulty(event) {
     return dif
 }
 
-// function fancyStart(btns) {
-//     const fancyInterval = setInterval(() => {
-//         console.log('tt')
-//     }, 500)
-//     fancyInterval
-// }
 const themeDropdown = document.querySelector('#theme-dropdown')
 themeDropdown.addEventListener('change', (event) => chooseTheme(event))
 

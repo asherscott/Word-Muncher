@@ -27,21 +27,6 @@
 
         <div id="body">
             <div id = "wordColumn">
-                <form id="new-words">
-                    <h4>Synonym Toast Munch!</h4>
-                    <p>Enter a word below to munch on some synonyms</p>
-                    <input type="text" name="w1" id="w1" placeholder="Enter a word"/>
-
-                    <input type="submit" value="Create" />
-                </form>
-                <p>[OR]</p>
-                <label for="select-wordlist" class = "dropdown"><h4>Select a Word List</h4></label>
-                <select id="list-dropdown" name="select-wordlist">
-                    <option value="4">Default List</option>
-                    <option value="1">4 Letter Words</option>
-                    <option value="2">5 Letter Words</option>
-                    <option value="3">6 Letter Words</option>
-                </select>
                 <div id="wordList">
                     <h4>Word List</h4>
                     <ul>
@@ -56,15 +41,15 @@
         
             <div id="gameColumn">
                 <div id="gameHead">
-                    <div class="tiles startBtn"> </div>
-                    <div class="tiles startBtn"> </div>
-                    <div class="tiles startBtn">S</div>
-                    <div class="tiles startBtn">T</div>
-                    <div class="tiles startBtn">A</div>
-                    <div class="tiles startBtn">R</div>
-                    <div class="tiles startBtn">T</div>
-                    <div class="tiles startBtn"> </div>
-                    <div class="tiles startBtn"> </div>
+                    <div class="tiles startBtn one"> </div>
+                    <div class="tiles startBtn two"> </div>
+                    <div class="tiles startBtn three">S</div>
+                    <div class="tiles startBtn four">T</div>
+                    <div class="tiles startBtn five">A</div>
+                    <div class="tiles startBtn six">R</div>
+                    <div class="tiles startBtn seven">T</div>
+                    <div class="tiles startBtn eight"> </div>
+                    <div class="tiles startBtn nine"> </div>
                 </div>
                 <div id ="gamespace">
                     <div id = "scoreboard">SCORE <span>0</span></div>
@@ -83,7 +68,21 @@
             </div>
 
             <div id = "settings">
-                <h4>Settings Menu</h4>
+                <form id="new-words">
+                    <h4>Synonym Toast Munch!</h4>
+                    <p>Enter a word below to munch on some synonyms</p>
+                    <input type="text" name="w1" id="w1" placeholder="Enter a word"/>
+
+                    <input type="submit" value="Create" />
+                </form>
+                <p>[OR]</p>
+                <label for="select-wordlist" class = "dropdown"><h4>Select a Word List</h4></label>
+                <select id="list-dropdown" name="select-wordlist">
+                    <option value="4">Default List</option>
+                    <option value="1">4 Letter Words</option>
+                    <option value="2">5 Letter Words</option>
+                    <option value="3">6 Letter Words</option>
+                </select>
                 <div id = "themes">
                     <h4>Change Theme</h4>
                     <select id="theme-dropdown" name="select-theme">
@@ -100,6 +99,7 @@
                         <option value="hard">Hard</option>
                         <option value="insane">Insane</option>
                     </select>
+                    
                 </div>
             </div>
         </div>

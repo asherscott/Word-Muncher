@@ -12,10 +12,12 @@ h4 {
     color:#3d6800
 }
 #banner {
-    text-align: center;
     width: 100%;
-    height: 80px;
+    height: 120px;
     background-color: #a283be;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #wordColumn {
@@ -29,10 +31,6 @@ h4 {
     display: flex;
     flex-flow: column wrap;
     flex: 0 0 500px;
-}
-#startBttn{
-    position:relative;
-    background-color: #73AD21;
 }
 
 #gameHead {
@@ -97,9 +95,11 @@ h4 {
   float:right;
     background-color: rgb(255 199 73); 
 }
+
 li{
 text-align:left;
 }
+
 .tiles {
     border: 2px solid black;
     flex: 0 1 50px;
@@ -156,10 +156,29 @@ input {
     opacity:1.0;
     width: 100px;
 }
+#banner > div {
+    flex: 0 1 70px;
+    height: 70px;
+    font-size: 40px;
+    margin: 4px;
+    transition: transform .5s;
+}
+
+#banner > div:hover {
+    transform: scale(1.3);
+}
 
 @media (max-width: 630px) {
     #wordColumn {
         display: none;
+    }
+    #banner > div {
+        font-size: 30px;
+        margin: 2px;
+        height: 60px;
+    }
+    #gameHead {
+        flex: 0 0 70px;
     }
 }
 
@@ -168,4 +187,30 @@ input {
     #settings {
         display: none;
     }
+}
+
+button:hover,  input + input:hover, select:hover {
+    cursor: pointer;
+}
+
+.startBtn {
+    transition: transform .2s;
+    cursor: pointer;
+    animation: bounce 6s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+      }
+}
+
+.startBtn:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+    filter: drop-shadow(0 0 2px gold)
 }
