@@ -195,8 +195,11 @@ function displayMunched(letterArray) {
 }
 
 function clearTiles() {
-   gameHead.innerHTML =""
     const munchedWord = []
+    while (gameHead.firstChild) {
+        munchedWord.push(gameHead.firstChild.textContent)
+        gameHead.removeChild(gameHead.firstChild);
+    }
     displayMunched(munchedWord)
 }
 
