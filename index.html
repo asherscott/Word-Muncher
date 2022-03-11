@@ -2,8 +2,11 @@
 <html>
     <head>
         <title>Word Muncher</title>
-        <link rel="stylesheet" href="style.css">
+        <link id = "style" rel="stylesheet" href="allison-style.css">
         <script defer rel="js" src="index.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Source+Serif+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
     </head>
 
     <body>
@@ -25,11 +28,13 @@
         <div id="body">
             <div id = "wordColumn">
                 <form id="new-words">
-                    <h4>Build Your Own Wordlist</h4>
+                    <h4>Synonym Toast Munch!</h4>
+                    <p>Enter a word below to munch on some synonyms</p>
                     <input type="text" name="w1" id="w1" placeholder="Enter a word"/>
 
                     <input type="submit" value="Create" />
                 </form>
+                <p>[OR]</p>
                 <label for="select-wordlist" class = "dropdown"><h4>Select a Word List</h4></label>
                 <select id="list-dropdown" name="select-wordlist">
                     <option value="4">Default List</option>
@@ -68,7 +73,10 @@
                     <div class="tiles" id="charTile"></div>
                     <div class= "endgame">
                         <form class ="endgame" id = "endgame">
-                            <input type ="submit" value = "Play Again!"/>
+                            <div class = "final" id = "finalScore"></div>
+                            <div class = "final" id = "finalTime"></div>
+                            <div class = "final" id = "finalDifficulty"></div>
+                            <input type ="submit" value = "Play Again!" id ="playAgain"/>
                         </form>
                     </div>
                 </div>
@@ -78,9 +86,11 @@
                 <h4>Settings Menu</h4>
                 <div id = "themes">
                     <h4>Change Theme</h4>
-                    <button class = "button" id = "theme1">Theme 1</button>
-                    <button class = "button" id = "theme2">Theme 2</button>
-                    <button class = "button" id = "theme3">Theme 3</button>
+                    <select id="theme-dropdown" name="select-theme">
+                    <option value = "allison-style">Theme 1</option>
+                    <option value = "style">Theme 2</option>
+                    <option value = "theme3">Theme 3</option>
+                </select>
                 </div>
                 <div id = "difficulty">
                     <label for="select-difficulty" class = "dropdown"><h4>Difficulty</h4></label>

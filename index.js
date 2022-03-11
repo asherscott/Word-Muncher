@@ -4,12 +4,16 @@ const gamespace     = document.querySelector(`#gamespace`)
 const gameHead      = document.querySelector('#gameHead')
 const charTile      = document.querySelector('#charTile')
 const munchedList   = document.querySelector('#munchedList')
-let scoreValue = 0
-//TODO: pull words list up here -> decide how to finalize, replace testArray with variable name;
-let loadedList; //list loaded from internal database
+const endscreen     = document.querySelector(`.endgame`)
+
+let loadedList; //list loaded from database (internal or external API)
 let gameWords //list that will be manipulated in spawnLetter
+
 const defaultList = ['The', 'Magnificent', 'Word', 'Muncher', 'Munches', 'Many', 'Words']
 let gameOver = false;
+let dif = 'easy'
+let scoreValue = 0
+let totalTime 
 //TEST VARIABLES//
 //const testNestedArray = grabLetters(['hi','yes','ok']);
 const testChar = 'T'
@@ -30,61 +34,80 @@ const previousPos = [];
 
 
 window.onload = function() {
+    endscreen.style.display = "none";
     const startBtns = gameHead.querySelectorAll('.startBtn')
     startBtns.forEach(btn => btn.addEventListener(`click`, onStart)) 
 
     charTile.style.display = 'none'
 
     displayList(defaultList)
-    fancyStart(startBtns)
+    // fancyStart(startBtns)
 }
-//TODO: add start button
+
 //everything that needs to happen when start
-
 function onStart(){
-    // chooseList();
-    chooseList();
 
+//loads chosen list or default list if nothing is chosen
+if(loadedList){
+    gameWords = grabLetters(loadedList)
+    displayList(loadedList)
+} else {
+    gameWords = grabLetters([`hi`])
+}
+//initializes snake position
     setPosOrSize(snake, 'left', snakePos.x)
     setPosOrSize(snake, 'bottom', snakePos.y)
 
     setPosOrSize(snake, 'width', size)
     setPosOrSize(snake, 'height', size)
 
+//spawns initial tile
     charTile.style.display = 'block'
     spawnTile(gameWords[0].shift())
     moveSnake(intervalSpeed)
 
+//initiates timer
     setInterval(count,1000);
 
     // clears WordSpeller on start
     gameHead.innerHTML = ''
 }
 
-if(endGame){endGame()}
+//everything that needs to happen when game ends
 function endGame(){
-    //make endscreen visible 
-    //add event listener to playAgain button
-    //clear out "words munched list"
-    //push score/time to scorelist
+    clearInterval(intervalId)
+    endscreen.style.display = "flex"
+    charTile.remove();
+
+    const playAgain = document.querySelector("#playAgain")
+    playAgain.addEventListener('submit',() => {});
+
+    const finalScore = document.querySelector("#finalScore","span") 
+    finalScore.innerText = scoreValue+" letters munched!";
+
+    const finalTime = document.querySelector("#finalTime","span")
+    finalTime.innerText = "in "+totalTime+" seconds!";
+
+    const finalDifficulty = document.querySelector("#finalDifficulty","span")
+    finalDifficulty.innerText = "Great job on "+dif+"!"
+
 }
 
-function reload(){
-
-}
 /*****Timer*******/
 function count(){
     if(!gameOver) {
         const timer = document.querySelector("#timer")
         const time = timer.querySelector('span')
         time.innerText = parseInt(time.innerText)+1
+        totalTime = parseInt(time.innerText)
+        return totalTime
     };
 }
 
 ////*****SNAKE *******/
 function moveSnake(speed) {
-
     document.addEventListener('keydown', (event) => {
+        if(!gameOver){
         switch(event.key) {
             case 'ArrowRight':
                 moveInterval('x', 'left', true, speed)
@@ -99,7 +122,8 @@ function moveSnake(speed) {
                 moveInterval('y', 'bottom', false, speed)
                 break;
         }
-    })
+    }
+})
 }
 
 
@@ -146,7 +170,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
   function spawnNext(nestedArray) {
     spellWord(charTile.innerText);
     // const poppedLetter = 
-    munch();
+    munchFlash();
     updateScore()
     spawnTile(nestedArray[0].shift())
     addSnake()
@@ -164,36 +188,38 @@ function move(snakeCoordinate, windowAxis, movePositive) {
     if (snakePos.x === tileX && snakePos.y === tileY) {
         //if testNestedArray is 
         if(gameWords[0].length === 0 && gameWords.length === 1){
-            updateScore()
-            munch();
-            spellWord(charTile.innerText);
-            clearTiles();
             gameOver = true;
-            //endGame();
+            updateScore()
+            munchFlash();
+            spellWord(charTile.innerText);
+            setTimeout(() => clearTiles(),700);
+            endGame();
         }
         else if(gameWords[0].length===0 && !gameOver) {
             gameWords.shift()
+            setTimeout(() => clearTiles(),700);
             spawnNext(gameWords)
-            //call to function -> populating to munchedList 
-            clearTiles();
         }
         else if (!gameOver){
         spawnNext(gameWords)
         }
     }
 } 
-// function addToMunchedList(){
-//     const munchedList = document.querySelector(`#munchedList`);
-//     const li = document.createElement('li');
-//     // li.innerText = 
-//     munchedList.append(li)
-// }
+
+
+
+/**********Update Display Based on Munched **********/
+function munchFlash(){
+    snake.style.backgroundColor = "pink";
+    setTimeout(() => snake.style.backgroundColor = "black",500);
+ }
 
 function displayMunched(letterArray) {
     const li = document.createElement('li')
     li.textContent = letterArray.join('')
     munchedList.querySelector('ul').append(li)
 }
+
 
 function clearTiles() {
     const munchedWord = []
@@ -221,63 +247,19 @@ function moveInterval(snakeCoordinate, windowAxis, movemaxy, speed) {
     }
 }
 
-function munch(){
-    snake.style.backgroundColor = "pink";
-    setTimeout(() => snake.style.backgroundColor = "black",500);
- }
-
  /******Word Lists ********/
 
- /////build your own word list/////
+ /////Synonym Toast Munch/////
 
-const form = document.querySelector(`#new-words`)
-let userlistCounter = 0
+const wordForm = document.querySelector(`#new-words`)
 
-form.addEventListener(`submit`,(e) => {
+wordForm.addEventListener(`submit`,(e) => {
     e.preventDefault();
-    const w1 = document.querySelector(`#w1`).value;
-
-    // newUserList = [w1,w2,w3,w4,w5];
-    // userlistCounter+=1;
+    const enteredWord = document.querySelector(`#w1`).value;
+    getSyns(enteredWord);
 })
 
-//construct new list object 
-// function constructUserList(){
-//     if(userlistCounter!== 0) {
-//         const userlist = {
-//          name:"userlist"+userlistCounter,
-//          words:newUserList,
-//      }
-//      return userlist;
-//     }
-//  }
-
-//push object to database
-// fetch(`http://localhost:3000/wordlist`,{
-//     method:`POST`,
-//     headers:{"Content-Type":"application/json",
-//     "Accept":"application/json"},
-//     body:JSON.stringify(constructUserList())
-// })
-
- /////select a wordlist/////
-const dropdown = document.querySelector(`select`);
-dropdown.addEventListener(`change`,(e) => loadSelectList(e))
-
-
-function loadSelectList(e){
-    const selectedListId = e.target.value;
-    fetch(`http://localhost:3000/wordlist/${selectedListId}`)
-    .then(returnlistJSON => returnlistJSON.json())
-    .then(listObj => {
-        loadedList = listObj.words
-        grabLetters(loadedList)
-        displayList(loadedList)
-    })
-    return loadedList
-}
-
- ////external API ////////////
+ ////access Words API to get synonyms ////////////
  function getSyns(inputWord) {
     fetch(`https://wordsapiv1.p.rapidapi.com/words/${inputWord}/synonyms`, {
      "method": "GET",
@@ -288,15 +270,27 @@ function loadSelectList(e){
  })
  .then(res => res.json())
  .then(words => {
-     debugger;
-     grabLetters(words.synonyms)})
+     loadedList = words.synonyms})
  .catch(err => {
      console.error(err);
  });
- }000
+ }
 
+ /////Select a Word List/////
+const dropdown = document.querySelector(`select`);
+dropdown.addEventListener(`change`,(e) => loadSelectList(e))
 
- /****** Pull Words from Wordlist ********/ 
+function loadSelectList(e){
+    const selectedListId = e.target.value;
+    fetch(`http://localhost:3000/wordlist/${selectedListId}`)
+    .then(returnlistJSON => returnlistJSON.json())
+    .then(listObj => {
+        loadedList = listObj.words
+    })
+    return loadedList;
+}
+
+ /****** Pull Words from loadedList ********/ 
 //grabLetters + makeLettersArray creates a nested array of letters
 function grabLetters(wordsArray){
     const grabLettersArray = []
@@ -304,7 +298,7 @@ function grabLetters(wordsArray){
         grabLettersArray.push(makeLetterArray(word))
       };
     gameWords = grabLettersArray;
-    return grabLettersArray;
+    return gameWords;
 }
 
 function makeLetterArray(word){
@@ -313,18 +307,6 @@ function makeLetterArray(word){
     lettersArray.push(letter)
     }
     return lettersArray
-}
-
-////Choose List///////
-
-function chooseList(){
-    // debugger;
-if (loadedList) {
-        gameWords = grabLetters(loadedList)
-    } else {
-        gameWords = grabLetters(defaultList)
-    }
-    return gameWords
 }
 
 /******Work Through Array of Words, Spawn Tiles  ********/ 
@@ -400,7 +382,7 @@ function displayList(list) {
         ul.append(li)
     })
 }
-
+/*****Settings Menu *******/
 function increaseSpeed(difficulty) {
     // difficulty modes will probably be changed from strings to variables
     if(intervalSpeed >= 60 && difficulty === 'medium') {
@@ -418,15 +400,25 @@ function increaseSpeed(difficulty) {
 const difDropdown = document.querySelector('#difficulty-dropdown')
 difDropdown.addEventListener('change', (event) => chooseDifficulty(event))
 
-let dif = 'easy'
+
 function chooseDifficulty(event) {
     dif = event.target.value
     return dif
 }
 
-function fancyStart(btns) {
-    const fancyInterval = setInterval(() => {
-        console.log('tt')
-    }, 500)
-    fancyInterval
+// function fancyStart(btns) {
+//     const fancyInterval = setInterval(() => {
+//         console.log('tt')
+//     }, 500)
+//     fancyInterval
+// }
+const themeDropdown = document.querySelector('#theme-dropdown')
+themeDropdown.addEventListener('change', (event) => chooseTheme(event))
+
+
+function chooseTheme(event) {
+    const theme = event.target.value
+    const style = document.querySelector("#style");
+    style.href = `${theme}.css`
+    debugger;
 }
