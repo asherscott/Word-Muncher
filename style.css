@@ -101,7 +101,7 @@
 }
 
 #endgame{
-    display:none;
+display:block;
    background-color:chartreuse;
    position: relative;
    height:400px;
