@@ -17,11 +17,11 @@ let totalTime
 
 let intervalId;
 let keyTarget;
-let bodyId = 0
+let snakeBodyId = 0
 
-const bounds = {min: 0, max: 480}
 const previousPos = [];
 const snakePos = {x: 20, y: 240}
+const bounds = {min: 0, max: 480}
 
 const size = 20
 let intervalSpeed = 100
@@ -38,23 +38,14 @@ window.onload = function() {
 
     document.querySelector('#theme-dropdown')       .addEventListener('change', chooseTheme)
     document.querySelector('#difficulty-dropdown')  .addEventListener('change', (event) => difficulty = event.target.value)
-    document.querySelector(`#new-words`)            .addEventListener(`submit`, submitWord)
     document.querySelector(`select`)                .addEventListener(`change`, loadDropdownList)
+    document.querySelector(`#new-words`)            .addEventListener(`submit`, submitWord)
 }
 
 /*****Settings Menu *******/
 function increaseSpeed(difficulty) {
-    (difficulty === 'medium' && intervalSpeed >= 40) ? intervalSpeed = intervalSpeed / 1.05 : null;
-    (difficulty === 'hard'   && intervalSpeed >= 25) ? intervalSpeed = intervalSpeed / 1.10 : null;
-
-    // switch(difficulty) {
-    //     case 'medium':
-    //         intervalSpeed >= 40 ? intervalSpeed = intervalSpeed / 1.05 : null;
-    //         break;
-    //     case 'hard':
-    //         intervalSpeed >= 25 ? intervalSpeed = intervalSpeed / 1.12 : null;
-    //         break;
-    // }
+    (difficulty === 'medium' && intervalSpeed >= 50) ? intervalSpeed = intervalSpeed / 1.08 : null;
+    (difficulty === 'hard'   && intervalSpeed >= 25) ? intervalSpeed = intervalSpeed / 1.12 : null;
 }
 
 const chooseTheme = (event) => document.querySelector("#style").href = `${event.target.value}.css`
@@ -68,20 +59,15 @@ function onStart() {
     } else {
         gameWords = grabLetters(defaultList)
     }
-    //initializes snake position
-    setPosOrSize(snake, 'left', snakePos.x)
-    setPosOrSize(snake, 'bottom', snakePos.y)
 
-    setPosOrSize(snake, 'width', size)
-    setPosOrSize(snake, 'height', size)
+    setPosition(snake, snakePos)
+    setSize(snake)
+    changeSnakeDirection()
 
-    //spawns initial tile
     charTile.style.display = 'block'
     spawnTile(gameWords[0].shift())
-    changeSnakeDirection(intervalSpeed)
 
-    //initiates timer
-    setInterval(count,1000);
+    setInterval(count, 1000);
 
     // clears WordSpeller on start
     gameHead.innerHTML = ''
@@ -111,8 +97,6 @@ function endGame() {
 /******Word Lists ********/
 
 /////Synonym Toast Munch/////
-
-
 function submitWord(event) {
     event.preventDefault();
     const enteredWord = document.querySelector(`#w1`).value;
@@ -132,9 +116,7 @@ function getSyns(inputWord) {
   .then(words => {
       loadedList = words.synonyms
       displayList(loadedList)})
-  .catch(err => {
-      console.error(err);
-  });
+  .catch(err => console.error(err));
 }
  
 /////Select a Word List (Dropdown)/////
@@ -167,70 +149,57 @@ function makeLetterArray(word){
 /*****Score, Timer Display*******/
 
 ////*****SNAKE *******/
-function changeSnakeDirection(speed) {
+function changeSnakeDirection() {
     document.addEventListener('keydown', (event) => {
         if(!gameOver){
             switch(event.key) {
                 case 'ArrowRight':
-                    moveInterval('x', 'left', true, speed)
+                    moveInterval('x', 'left', true)
                     break;
                 case 'ArrowLeft':
-                    moveInterval('x', 'left', false, speed)
+                    moveInterval('x', 'left', false)
                     break;
                 case 'ArrowUp':
-                    moveInterval('y', 'bottom', true, speed)
+                    moveInterval('y', 'bottom', true)
                     break;
                 case 'ArrowDown':
-                    moveInterval('y', 'bottom', false, speed)
+                    moveInterval('y', 'bottom', false)
                     break;
             }
         }
     })
 }
 
-// moveMaxy = determines the direction along windowAxis the snake will move. up/down, left/max
-function move(snakeCoordinate, windowAxis, moveMaxy) {
-    // an array of objects that contain the snakes past coordinates
-    previousPos.push({...snakePos})
-    // Controls positions of the snake body divs
-    if(bodyId > 0) {
-        const snakeBodyArray = Array.from(document.querySelectorAll('.snake')).slice(1)
-        snakeBodyArray.forEach((snakeBody, index) => {
-            setPosOrSize(snakeBody, 'left', previousPos[previousPos.length - (index + 1)].x)
-            setPosOrSize(snakeBody, 'bottom', previousPos[previousPos.length - (index + 1)].y)
-        })
-    }
+function moveSnakeHead(snakeCoordinate, windowAxis, moveMaxy) {
+    previousPos.push({...snakePos});
 
+    snakeBodyId ? moveSnakeBody() : null;
 
-    
+    // moves up/right if true, down/left if false
     (moveMaxy === true) 
-    ? snakePos[snakeCoordinate] += size     // Moves either up or max
-    : snakePos[snakeCoordinate] -= size;    // Moves either down or left
+    ? snakePos[snakeCoordinate] += size
+    : snakePos[snakeCoordinate] -= size;
 
-    snake.style[windowAxis] = snakePos[snakeCoordinate] + 'px'  // Displays movement on the DOM
+    snake.style[windowAxis] = snakePos[snakeCoordinate] + 'px';
 
+    stopAtBorder(windowAxis)
+    munchTile()
+} 
 
-
+function stopAtBorder(windowAxis) {
     // stop movement if the snake is against the border AND trying to go outside 
-    // TODO: make hardcoded conditionals work with "bounds"
-    if(snakePos.x === 480 && windowAxis === 'left') {
-        clearInterval(intervalId)
-    }else if(snakePos.x === 0 && windowAxis === 'left') {
-        clearInterval(intervalId)
-    }else if(snakePos.y === 480 && windowAxis === 'bottom') {
-        clearInterval(intervalId)
-    }else if(snakePos.y === 0 && windowAxis === 'bottom') {
-        clearInterval(intervalId)
-    }
+    (snakePos.x === bounds.max && windowAxis === 'left')   ? clearInterval(intervalId) : null;
+    (snakePos.x === bounds.min && windowAxis === 'left')   ? clearInterval(intervalId) : null;
+    (snakePos.y === bounds.max && windowAxis === 'bottom') ? clearInterval(intervalId) : null;
+    (snakePos.y === bounds.min && windowAxis === 'bottom') ? clearInterval(intervalId) : null;
+}
 
-
+function munchTile() {
     // checks if tile coordinates match snake coordinates
     const tileX = parseInt(charTile.style.left.replace('px', ''))
     const tileY = parseInt(charTile.style.bottom.replace('px', ''))
 
-function munch(snakeX,snakeY,tileX,tileY){
-    if (snakeX === tileX && snakeY === tileY) {
-        //if testNestedArray is 
+    if (snakePos.x === tileX && snakePos.y === tileY) {
         if(gameWords[0].length === 0 && gameWords.length === 1){
             gameOver = true;
             updateScore()
@@ -238,38 +207,37 @@ function munch(snakeX,snakeY,tileX,tileY){
             spellWord(charTile.innerText);
             setTimeout(() => clearTiles(),700);
             endGame();
-        }
-        else if(gameWords[0].length===0 && !gameOver) {
+        }else if(gameWords[0].length === 0 && !gameOver) {
             gameWords.shift()
             setTimeout(() => clearTiles(),700);
             spawnNext(gameWords)
-        }
-        else if (!gameOver){
-        spawnNext(gameWords)
+        }else if (!gameOver){
+            spawnNext(gameWords)
         }
     }
 }
 
-munch(snakePos.x,snakePos.y,tileX,tileY)
-} 
+function moveSnakeBody() {
+    const snakeBodyArray = Array.from(document.querySelectorAll('.snake')).slice(1)
+    snakeBodyArray.forEach((snakeBody, index) => setPosition(snakeBody, previousPos[previousPos.length - (index + 1)]))
+}
 
-function moveInterval(snakeCoordinate, windowAxis, moveMaxy, speed) {
+function moveInterval(snakeCoordinate, windowAxis, moveMaxy) {
     if(keyTarget !== event.key) {   
         keyTarget = event.key
 
         clearInterval(intervalId)
-        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, moveMaxy), speed)
+        intervalId = setInterval(() => moveSnakeHead(snakeCoordinate, windowAxis, moveMaxy), intervalSpeed)
     }
 }
 /**********Rendering, Updating Display **********/
-function count(){
+function count() {
     if(!gameOver) {
-        const timer = document.querySelector("#timer")
-        const time = timer.querySelector('span')
-        time.innerText = parseInt(time.innerText)+1
+        const time = gamespace.querySelector('#timer > span')
+        time.innerText = parseInt(time.innerText) + 1
         totalTime = parseInt(time.innerText)
         return totalTime
-    };
+    }
 }
 
 function spawnNext(nestedArray) {
@@ -282,9 +250,8 @@ function spawnNext(nestedArray) {
 }
 
 function updateScore(){
-    scoreValue+=1
-    const scoreboard = document.querySelector("#scoreboard")
-    const score = scoreboard.querySelector('span')
+    scoreValue++
+    const score = gamespace.querySelector('#scoreboard > span')
     score.innerText = scoreValue
 }
 
@@ -300,47 +267,52 @@ function displayMunchedList(letterArray) {
 }
 
 function clearTiles() {
-    const munchedWord = []
+    const munchedLetters = []
     while (gameHead.firstChild) {
-        munchedWord.push(gameHead.firstChild.textContent)
+        munchedLetters.push(gameHead.firstChild.textContent)
         gameHead.removeChild(gameHead.firstChild);
     }
-    displayMunchedList(munchedWord)
+    displayMunchedList(munchedLetters)
 }
 
 // TODO: (spawn location !== snake location)
 function spawnTile(char) {
-
     // generates a random number between 0 and gamebounds, that is divisable by snake size (spawns on grid)
-    let randSpawn = (range) => (Math.floor(Math.random() * (range / size + 1))) * size
+    let randSpawn = () => (Math.floor(Math.random() * (bounds.max / size + 1))) * size
 
     charTile.textContent = char
-    // set div dimensions
-    setPosOrSize(charTile, 'width', size)
-    setPosOrSize(charTile, 'height', size)
-    // set div coordinates to random x/y and display on DOM
-    setPosOrSize(charTile, 'left', randSpawn(bounds.max))
-    setPosOrSize(charTile, 'bottom', randSpawn(bounds.max))
+
+    setSize(charTile)
+    setPosition(charTile, randSpawn(), 'left')
+    setPosition(charTile, randSpawn(), 'bottom')
 
     gamespace.append(charTile)
 }
 
 function addSnake() {
     const snakeBody = document.createElement('div')
+    snakeBodyId++
+    snakeBody.id = snakeBodyId
     snakeBody.className = 'snake'
-    bodyId++
-    snakeBody.id = bodyId
-    setPosOrSize(snakeBody, 'left', previousPos[previousPos.length - 1].x)
-    setPosOrSize(snakeBody, 'bottom', previousPos[previousPos.length - 1].y)
-    
-    setPosOrSize(snakeBody, 'width', size)
-    setPosOrSize(snakeBody, 'height', size)
+
+    setSize(snakeBody)
+    setPosition(snakeBody, previousPos[previousPos.length - 1])
 
     gamespace.append(snakeBody)
 }
 
-function setPosOrSize(var1, var2, var3) {
-    var1.style[var2] = var3 + 'px'
+function setSize(element) {
+    element.style.height = size + 'px'
+    element.style.width = size + 'px'
+}
+
+function setPosition(element, value, axis) {
+    if(typeof(value) === 'object') {
+        element.style.left   = value.x + 'px'
+        element.style.bottom = value.y + 'px'
+    } else {
+        element.style[axis] = value + 'px'
+    }
 }
 
 function spellWord(char) {
@@ -359,5 +331,3 @@ function displayList(list) {
         ul.append(li)
     })
 }
-
-
