@@ -19,12 +19,12 @@ let intervalId;
 let keyTarget;
 let bodyId = 0
 
-const snakePos = {x: 20, y: 240}
-const size = 20
-let intervalSpeed = 100
-
 const bounds = {min: 0, max: 480}
 const previousPos = [];
+const snakePos = {x: 20, y: 240}
+
+const size = 20
+let intervalSpeed = 100
 
 
 
@@ -32,37 +32,31 @@ window.onload = function() {
     endscreen.style.display = "none";
     charTile.style.display = 'none'
 
-    const startBtns = gameHead.querySelectorAll('.startBtn')
-    startBtns.forEach(btn => btn.addEventListener(`click`, onStart)) 
-
     displayList(defaultList)
 
-    const themeDropdown = document.querySelector('#theme-dropdown')
-    themeDropdown.addEventListener('change', (event) => chooseTheme(event))
+    gameHead.querySelectorAll('.startBtn').forEach(btn => btn.addEventListener(`click`, onStart)) 
 
-    const difDropdown = document.querySelector('#difficulty-dropdown')
-    difDropdown.addEventListener('change', (event) => chooseDifficulty(event))
+    document.querySelector('#theme-dropdown')       .addEventListener('change', (event) => chooseTheme(event))
+    document.querySelector('#difficulty-dropdown')  .addEventListener('change', (event) => dif = event.target.value)
 }
 
 /*****Settings Menu *******/
 function increaseSpeed(difficulty) {
-    // difficulty modes will probably be changed from strings to variables
-    if(intervalSpeed >= 60 && difficulty === 'medium') {
-        // regular mode --- minimum speed = 60
-        intervalSpeed = intervalSpeed / 1.02
-    }else if(intervalSpeed >= 35 && difficulty === 'hard') {
-        // hard mode --- minimum speed = 35
-        intervalSpeed = intervalSpeed / 1.06
-    }else if(intervalSpeed >= 25 && difficulty === 'insane') {
-        // insane mode --- minimum speed = 25
-        intervalSpeed = intervalSpeed / 1.1
+    switch(difficulty) {
+        case 'medium':
+            intervalSpeed >= 60 ? intervalSpeed = intervalSpeed / 1.02 : null;
+            break;
+        case 'hard':
+            intervalSpeed >= 35 ? intervalSpeed = intervalSpeed / 1.06 : null;
+            break;
+        case 'insane':
+            intervalSpeed >= 25 ? intervalSpeed = intervalSpeed / 1.10 : null;
+            break;
     }
-    // if difficulty === easy, then do nothing
-}
-
-function chooseDifficulty(event) {
-    dif = event.target.value
-    return dif
+    // Refactoring gone too far?
+    // (difficulty === 'medium' && intervalSpeed >= 60) ? intervalSpeed = intervalSpeed / 1.02 : null;
+    // (difficulty === 'hard'   && intervalSpeed >= 35) ? intervalSpeed = intervalSpeed / 1.06 : null;
+    // (difficulty === 'insane' && intervalSpeed >= 25) ? intervalSpeed = intervalSpeed / 1.10 : null;
 }
 
 function chooseTheme(event) {
@@ -132,10 +126,10 @@ function endGame(){
      e.preventDefault();
      const enteredWord = document.querySelector(`#w1`).value;
      getSyns(enteredWord);
- })
+})
  
   ////access Words API to get synonyms ////////
-  function getSyns(inputWord) {
+function getSyns(inputWord) {
      fetch(`https://wordsapiv1.p.rapidapi.com/words/${inputWord}/synonyms`, {
       "method": "GET",
       "headers": {
@@ -150,13 +144,13 @@ function endGame(){
   .catch(err => {
       console.error(err);
   });
-  }
+}
  
   /////Select a Word List (Dropdown)/////
  const dropdown = document.querySelector(`select`);
  dropdown.addEventListener(`change`,(e) => loadSelectList(e))
  
- function loadSelectList(e){
+function loadSelectList(e){
      const selectedListId = e.target.value;
      fetch(`http://localhost:3000/wordlist/${selectedListId}`)
      .then(returnlistJSON => returnlistJSON.json())
@@ -165,26 +159,26 @@ function endGame(){
          displayList(loadedList)
      })
      return loadedList;
- }
+}
  
   /****** Pull Words from loadedList ********/ 
  //grabLetters + makeLettersArray creates a nested array of letters
- function grabLetters(wordsArray){
+function grabLetters(wordsArray){
      const grabLettersArray = []
      for (const word of wordsArray) {
          grabLettersArray.push(makeLetterArray(word))
        };
      gameWords = grabLettersArray;
      return gameWords;
- }
+}
  
- function makeLetterArray(word){
+function makeLetterArray(word){
      const lettersArray = []
      for(letter of word){
      lettersArray.push(letter)
      }
      return lettersArray
- }
+}
  
 /*****Score, Timer Display*******/
 
@@ -296,25 +290,24 @@ function count(){
 
 function spawnNext(nestedArray) {
     spellWord(charTile.innerText);
-    // const poppedLetter = 
     munchFlash();
     updateScore()
     spawnTile(nestedArray[0].shift())
     addSnake()
     increaseSpeed(dif)
-  }
+}
 
 function updateScore(){
-      scoreValue+=1
-      const scoreboard = document.querySelector("#scoreboard")
-      const score = scoreboard.querySelector('span')
-      score.innerText = scoreValue
-  }
+    scoreValue+=1
+    const scoreboard = document.querySelector("#scoreboard")
+    const score = scoreboard.querySelector('span')
+    score.innerText = scoreValue
+}
 
 function munchFlash(){
-    snake.style.backgroundColor = "pink";
-    setTimeout(() => snake.style.backgroundColor = "black",500);
- }
+snake.style.backgroundColor = "pink";
+setTimeout(() => snake.style.backgroundColor = "black",500);
+}
 
 function displayMunchedList(letterArray) {
     const li = document.createElement('li')
