@@ -1,6 +1,11 @@
 * {
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
+    /* filter: drop-shadow(0 0 1px rgb(255, 252, 209)); */
+}
+
+html {
+    background-color: rgb(9,24,51);
 }
 
 #body {
@@ -8,22 +13,27 @@
     align-items: center;
     justify-content: center;
 }
+
 h4 {
-    color:#3d6800
+    color:rgb(234,0,217);
+    filter: drop-shadow(1px 1px 0px rgb(10,189,198));
+
 }
+
 #banner {
     width: 100%;
     height: 120px;
-    background-color: #a283be;
+    background-color: rgb(10,189,198);
     display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: 500;
 }
 
 #wordColumn {
     flex: 0 1 250px;
     height: 600px;
-    border: 3px solid #73AD21;
+    border: 4px solid rgb(234,0,217);
     text-align: center;
 }
 
@@ -34,25 +44,27 @@ h4 {
 }
 
 #gameHead {
-    background-color: blanchedalmond;
+    background-color: rgb(19,62,124);
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
     flex: 0 0 100px;
-    border: 3px solid #73AD21
+    border-top: 4px solid rgb(234,0,217);
+    border-bottom: 4px solid rgb(234,0,217);
 }
 
 #gamespace {
     flex: 500px ;
-    background-color: powderblue;
-    border: 3px solid #73AD21;
+    background-color: rgb(113,28,145);
+    border-bottom: 4px solid rgb(234,0,217);
     position: relative;
 }
 
-#settings{
+#settings {
+    color: rgb(10,189,198);
     flex: 0 1 250px;
-    border: 3px solid #73AD21;
+    border: 4px solid rgb(234,0,217);
     text-align: center;
     height: 600px;
 }
@@ -73,31 +85,27 @@ h4 {
     position: relative;
 }
 
-#worspeller{
-    padding: 10px;
-    color:darkslateblue;
-    position: relative;
-}
-
 #scoreboard, #timer {
-    background-color: rgb(180 105 204); 
+    background-color: rgb(10,189,198); 
     height:40px;
     width:70px;
     text-align:center;
-    /* filter: drop-shadow(0 5px 4mm black); */
+    float:left;
+    border-bottom: 3px solid rgb(234,0,217);
 }
 
-#scoreboard{
-  float:left;
-    background-color: rgb(248 159 229); 
-}
-#timer{
-  float:right;
-    background-color: rgb(255 199 73); 
+#scoreboard {
+    border-right: 3px solid rgb(234,0,217);
 }
 
-li{
-text-align:left;
+#timer {
+    float:right;
+    border-left: 3px solid rgb(234,0,217);
+}
+
+li {
+    text-align:left;
+    color: rgb(10,189,198);
 }
 
 .tiles {
@@ -110,16 +118,25 @@ text-align:left;
     margin: 2px;
 }
 
+#gameHead .tiles {
+    border-color:rgb(10,189,198);
+    color:rgb(10,189,198);
+    filter: drop-shadow(0 0 6px white);
+}
+
 #charTile {
     position: absolute;
+    filter: drop-shadow(0 0 2px rgb(154, 250, 255));
+    color: rgb(129, 226, 255);
+    border-color: rgb(154, 250, 255);
 }
 
 .snake {
-    background-color: black;
+    background-color: rgb(154, 250, 255);
     position: absolute;
 }
 
-#endgame{
+#endgame {
     display:flex;
     margin-left:3px;
     margin-top:100px;
@@ -129,20 +146,21 @@ text-align:left;
     gap:10px;
     height:250px;
     width:400px;
-    border: 4px solid #663677;
-    background-color: rgb(180 105 204);
+    border: 4px solid rgb(234,0,217);
+    background-color: rgb(245, 205, 141);
     opacity: 0.75;
     padding: 70px 0;
     z-index:7;
- }
+}
 
-.final{
+.final {
     height:40px;
-    background-color:aliceblue;
+    background-color:rgb(255, 241, 219);
     padding:10px 5px 15px
 }
+
 input[type=button], input[type=submit], input[type=reset] {
-    background-color: #094b33;
+    background-color: rgb(19,62,124);
     border: none;
     color: white;
     padding: 4px;
@@ -151,11 +169,14 @@ input[type=button], input[type=submit], input[type=reset] {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 8px;
-  }
+}
+
 input {
     opacity:1.0;
     width: 100px;
+    background-color: rgb(10,189,198);
 }
+
 #banner > div {
     flex: 0 1 70px;
     height: 70px;
@@ -172,20 +193,28 @@ input {
     #wordColumn {
         display: none;
     }
+
     #banner > div {
         font-size: 30px;
         margin: 2px;
         height: 60px;
     }
+
     #gameHead {
         flex: 0 0 70px;
     }
+
+    #gameColumn {
+        border-left: 4px solid rgb(234,0,217);
+    }
 }
 
-/* media query 800px */
 @media (max-width: 810px) {
     #settings {
         display: none;
+    }
+    #gameColumn {
+        border-right: 4px solid rgb(234,0,217);
     }
 }
 
@@ -194,9 +223,12 @@ button:hover,  input + input:hover, select:hover {
 }
 
 .startBtn {
-    transition: transform .2s;
     cursor: pointer;
     animation: bounce 6s infinite;
+    border-color:rgb(10,189,198);
+    color:rgb(10,189,198);
+    filter: drop-shadow(0 0 6px white);
+    transition: transform .2s;
 }
 
 @keyframes bounce {
@@ -212,5 +244,13 @@ button:hover,  input + input:hover, select:hover {
 .startBtn:hover {
     transform: scale(1.2);
     cursor: pointer;
-    filter: drop-shadow(0 0 2px gold)
+    filter: drop-shadow(0 0 2px white);
 }
+
+select {
+    background-color:rgb(10,189,198);
+}
+
+::placeholder {
+    color: black;
+  }
