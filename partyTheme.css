@@ -59,6 +59,7 @@ h4 {
     background-color: rgb(113,28,145);
     border-bottom: 4px solid rgb(234,0,217);
     position: relative;
+    animation: party2 4s infinite;
 }
 
 #settings {
@@ -147,7 +148,7 @@ li {
     height:250px;
     width:400px;
     border: 4px solid rgb(234,0,217);
-    background-color: rgb(245, 205, 141);
+    background-color: rgb(19,62,124);
     opacity: 0.75;
     padding: 70px 0;
     z-index:7;
@@ -155,7 +156,7 @@ li {
 
 .final {
     height:40px;
-    background-color:rgb(255, 241, 219);
+    background-color:rgb(234,0,217);
     padding:10px 5px 15px
 }
 
@@ -253,4 +254,29 @@ select {
 
 ::placeholder {
     color: black;
+  }
+
+  .snake {
+    animation: party 2s infinite;
+    background-color: rgb(0, 217, 255);
+  }
+
+  @keyframes party {
+    0%, 100% {
+      filter: hue-rotate(0deg);
+    }
+
+    50% {
+        filter: hue-rotate(90deg);
+    }
+  }
+
+  @keyframes party2 {
+    0%, 100% {
+      filter: hue-rotate(0deg);
+    }
+
+    50% {
+        filter: hue-rotate(-20deg);
+    }
   }
