@@ -256,7 +256,7 @@ function updateScore(){
 }
 
 function munchFlash(){
-    if(document.querySelector("#style").href === 'file://wsl%24/Ubuntu/home/ashmaker1/Development/code/phase1/wordMuncher/allison-style.css') {
+    if(document.querySelector("#style").href.indexOf('allison-style.css')) {
         snake.style.backgroundColor = "pink";
         setTimeout(() => snake.style.backgroundColor = "black", 500);
     }
