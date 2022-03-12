@@ -11,7 +11,7 @@ let gameWords //list that will be manipulated in spawnLetter
 
 const defaultList = ['The', 'Magnificent', 'Word', 'Muncher', 'Munches', 'Many', 'Words']
 let gameOver = false;
-let dif = 'easy'
+let difficulty = 'easy'
 let scoreValue = 0
 let totalTime 
 
@@ -36,73 +36,66 @@ window.onload = function() {
 
     gameHead.querySelectorAll('.startBtn').forEach(btn => btn.addEventListener(`click`, onStart)) 
 
-    document.querySelector('#theme-dropdown')       .addEventListener('change', (event) => chooseTheme(event))
-    document.querySelector('#difficulty-dropdown')  .addEventListener('change', (event) => dif = event.target.value)
+    document.querySelector('#theme-dropdown')       .addEventListener('change', chooseTheme)
+    document.querySelector('#difficulty-dropdown')  .addEventListener('change', (event) => difficulty = event.target.value)
+    document.querySelector(`#new-words`)            .addEventListener(`submit`, submitWord)
+    document.querySelector(`select`)                .addEventListener(`change`, loadDropdownList)
 }
 
 /*****Settings Menu *******/
 function increaseSpeed(difficulty) {
-    switch(difficulty) {
-        case 'medium':
-            intervalSpeed >= 60 ? intervalSpeed = intervalSpeed / 1.02 : null;
-            break;
-        case 'hard':
-            intervalSpeed >= 35 ? intervalSpeed = intervalSpeed / 1.06 : null;
-            break;
-        case 'insane':
-            intervalSpeed >= 25 ? intervalSpeed = intervalSpeed / 1.10 : null;
-            break;
-    }
-    // Refactoring gone too far?
-    // (difficulty === 'medium' && intervalSpeed >= 60) ? intervalSpeed = intervalSpeed / 1.02 : null;
-    // (difficulty === 'hard'   && intervalSpeed >= 35) ? intervalSpeed = intervalSpeed / 1.06 : null;
-    // (difficulty === 'insane' && intervalSpeed >= 25) ? intervalSpeed = intervalSpeed / 1.10 : null;
+    (difficulty === 'medium' && intervalSpeed >= 40) ? intervalSpeed = intervalSpeed / 1.05 : null;
+    (difficulty === 'hard'   && intervalSpeed >= 25) ? intervalSpeed = intervalSpeed / 1.10 : null;
+
+    // switch(difficulty) {
+    //     case 'medium':
+    //         intervalSpeed >= 40 ? intervalSpeed = intervalSpeed / 1.05 : null;
+    //         break;
+    //     case 'hard':
+    //         intervalSpeed >= 25 ? intervalSpeed = intervalSpeed / 1.12 : null;
+    //         break;
+    // }
 }
 
-function chooseTheme(event) {
-    const theme = event.target.value
-    const style = document.querySelector("#style");
-    style.href = `${theme}.css`
-    debugger;
-}
+const chooseTheme = (event) => document.querySelector("#style").href = `${event.target.value}.css`
+
 //everything that needs to happen when start
-function onStart(){
-
-//loads chosen list or default list if nothing is chosen
-if(loadedList){
-    gameWords = grabLetters(loadedList)
-    displayList(loadedList)
-} else {
-    gameWords = grabLetters(defaultList)
-}
-//initializes snake position
+function onStart() {
+    //loads chosen list or default list if nothing is chosen
+    if(loadedList) {
+        gameWords = grabLetters(loadedList)
+        displayList(loadedList)
+    } else {
+        gameWords = grabLetters(defaultList)
+    }
+    //initializes snake position
     setPosOrSize(snake, 'left', snakePos.x)
     setPosOrSize(snake, 'bottom', snakePos.y)
 
     setPosOrSize(snake, 'width', size)
     setPosOrSize(snake, 'height', size)
 
-//spawns initial tile
+    //spawns initial tile
     charTile.style.display = 'block'
     spawnTile(gameWords[0].shift())
-    moveSnake(intervalSpeed)
+    changeSnakeDirection(intervalSpeed)
 
-//initiates timer
+    //initiates timer
     setInterval(count,1000);
 
-// clears WordSpeller on start
+    // clears WordSpeller on start
     gameHead.innerHTML = ''
 }
 
 //everything that needs to happen when game ends
-function endGame(){
+function endGame() {
     clearInterval(intervalId)
 
     endscreen.style.display = "flex"
     charTile.remove();
 
     const playAgain = document.querySelector("#playAgain")
-    playAgain.addEventListener('submit',() => {});
+    playAgain.addEventListener('submit', null);
 
     const finalScore = document.querySelector("#finalScore","span") 
     finalScore.innerText = scoreValue+" letters munched!";
@@ -111,32 +104,30 @@ function endGame(){
     finalTime.innerText = "in "+totalTime+" seconds!";
 
     const finalDifficulty = document.querySelector("#finalDifficulty","span")
-    finalDifficulty.innerText = "Great job on "+dif+"!"
-
+    finalDifficulty.innerText = `Great job on ${difficulty}!`
 }
 
 /********GamePlay Features*******/
- /******Word Lists ********/
+/******Word Lists ********/
 
- /////Synonym Toast Munch/////
+/////Synonym Toast Munch/////
 
- const wordForm = document.querySelector(`#new-words`)
 
- wordForm.addEventListener(`submit`,(e) => {
-     e.preventDefault();
-     const enteredWord = document.querySelector(`#w1`).value;
-     getSyns(enteredWord);
-})
+function submitWord(event) {
+    event.preventDefault();
+    const enteredWord = document.querySelector(`#w1`).value;
+    getSyns(enteredWord);
+}
  
-  ////access Words API to get synonyms ////////
+////access Words API to get synonyms ////////
 function getSyns(inputWord) {
-     fetch(`https://wordsapiv1.p.rapidapi.com/words/${inputWord}/synonyms`, {
-      "method": "GET",
-      "headers": {
-          "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
-          "x-rapidapi-key": "ed0843a013mshf0322f372ebf2e4p1c7f9bjsnfb7909794c3d"
-      }
-  })
+    fetch(`https://wordsapiv1.p.rapidapi.com/words/${inputWord}/synonyms`, {
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
+            "x-rapidapi-key": "ed0843a013mshf0322f372ebf2e4p1c7f9bjsnfb7909794c3d"
+        }
+    })
   .then(res => res.json())
   .then(words => {
       loadedList = words.synonyms
@@ -146,66 +137,59 @@ function getSyns(inputWord) {
   });
 }
  
-  /////Select a Word List (Dropdown)/////
- const dropdown = document.querySelector(`select`);
- dropdown.addEventListener(`change`,(e) => loadSelectList(e))
- 
-function loadSelectList(e){
-     const selectedListId = e.target.value;
-     fetch(`http://localhost:3000/wordlist/${selectedListId}`)
-     .then(returnlistJSON => returnlistJSON.json())
-     .then(listObj => {
-         loadedList = listObj.words
-         displayList(loadedList)
-     })
-     return loadedList;
+/////Select a Word List (Dropdown)/////
+function loadDropdownList(e){
+    fetch(`http://localhost:3000/wordlist/${e.target.value}`)
+    .then(returnlistJSON => returnlistJSON.json())
+    .then(listObj => {
+        loadedList = listObj.words
+        displayList(loadedList)
+    })
 }
  
-  /****** Pull Words from loadedList ********/ 
- //grabLetters + makeLettersArray creates a nested array of letters
+/****** Pull Words from loadedList ********/ 
+//grabLetters + makeLettersArray creates a nested array of letters
 function grabLetters(wordsArray){
-     const grabLettersArray = []
-     for (const word of wordsArray) {
-         grabLettersArray.push(makeLetterArray(word))
-       };
-     gameWords = grabLettersArray;
-     return gameWords;
+    const grabLettersArray = []
+    wordsArray.forEach(word => grabLettersArray.push(makeLetterArray(word)))
+    gameWords = grabLettersArray;
+    return gameWords;
 }
  
 function makeLetterArray(word){
-     const lettersArray = []
-     for(letter of word){
-     lettersArray.push(letter)
-     }
-     return lettersArray
+    const lettersArray = []
+    for(letter of word) {
+        lettersArray.push(letter)
+    }
+    return lettersArray
 }
  
 /*****Score, Timer Display*******/
 
 ////*****SNAKE *******/
-function moveSnake(speed) {
+function changeSnakeDirection(speed) {
     document.addEventListener('keydown', (event) => {
         if(!gameOver){
-        switch(event.key) {
-            case 'ArrowRight':
-                moveInterval('x', 'left', true, speed)
-                break;
-            case 'ArrowLeft':
-                moveInterval('x', 'left', false, speed)
-                break;
-            case 'ArrowUp':
-                moveInterval('y', 'bottom', true, speed)
-                break;
-            case 'ArrowDown':
-                moveInterval('y', 'bottom', false, speed)
-                break;
+            switch(event.key) {
+                case 'ArrowRight':
+                    moveInterval('x', 'left', true, speed)
+                    break;
+                case 'ArrowLeft':
+                    moveInterval('x', 'left', false, speed)
+                    break;
+                case 'ArrowUp':
+                    moveInterval('y', 'bottom', true, speed)
+                    break;
+                case 'ArrowDown':
+                    moveInterval('y', 'bottom', false, speed)
+                    break;
+            }
         }
-    }
-})
+    })
 }
 
-// movePositive = determines the direction along windowAxis the snake will move. up/down, left/max
-function move(snakeCoordinate, windowAxis, movePositive) {
+// moveMaxy = determines the direction along windowAxis the snake will move. up/down, left/max
+function move(snakeCoordinate, windowAxis, moveMaxy) {
     // an array of objects that contain the snakes past coordinates
     previousPos.push({...snakePos})
     // Controls positions of the snake body divs
@@ -219,7 +203,7 @@ function move(snakeCoordinate, windowAxis, movePositive) {
 
 
     
-    (movePositive === true) 
+    (moveMaxy === true) 
     ? snakePos[snakeCoordinate] += size     // Moves either up or max
     : snakePos[snakeCoordinate] -= size;    // Moves either down or left
 
@@ -269,12 +253,12 @@ function munch(snakeX,snakeY,tileX,tileY){
 munch(snakePos.x,snakePos.y,tileX,tileY)
 } 
 
-function moveInterval(snakeCoordinate, windowAxis, movemaxy, speed) {
+function moveInterval(snakeCoordinate, windowAxis, moveMaxy, speed) {
     if(keyTarget !== event.key) {   
         keyTarget = event.key
 
         clearInterval(intervalId)
-        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, movemaxy), intervalSpeed)
+        intervalId = setInterval(() => move(snakeCoordinate, windowAxis, moveMaxy), speed)
     }
 }
 /**********Rendering, Updating Display **********/
@@ -294,7 +278,7 @@ function spawnNext(nestedArray) {
     updateScore()
     spawnTile(nestedArray[0].shift())
     addSnake()
-    increaseSpeed(dif)
+    increaseSpeed(difficulty)
 }
 
 function updateScore(){
