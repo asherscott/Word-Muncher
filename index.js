@@ -71,6 +71,8 @@ function onStart() {
 
     // clears WordSpeller on start
     gameHead.innerHTML = ''
+
+    gamespace.focus()
 }
 
 //everything that needs to happen when game ends
@@ -256,7 +258,7 @@ function updateScore(){
 }
 
 function munchFlash(){
-    if(document.querySelector("#style").href.indexOf('allison-style.css')) {
+    if(document.querySelector("#style").href.indexOf('allison-style.css') > 0) {
         snake.style.backgroundColor = "pink";
         setTimeout(() => snake.style.backgroundColor = "black", 500);
     }
