@@ -63,6 +63,7 @@ function onStart() {
     setPosition(snake, snakePos)
     setSize(snake)
     changeSnakeDirection()
+    disableClickableOnStart()
 
     charTile.style.display = 'block'
     spawnTile(gameWords[0].shift())
@@ -73,6 +74,13 @@ function onStart() {
     gameHead.innerHTML = ''
 
     gamespace.focus()
+}
+
+function disableClickableOnStart() {
+    document.querySelector('input + input').disabled = true;
+    document.querySelector('#w1').disabled = true;
+    document.querySelector('#list-dropdown').disabled = true;
+    document.querySelector('#difficulty-dropdown').disabled = true;
 }
 
 //everything that needs to happen when game ends
