@@ -9,4 +9,4 @@ A reimagination of the classic snake game with an original twist.
 - JavaScript
 - json-server
 
-## Try it out [here](https://github.com/asherscott/Word-Muncher)
+## Try it out [here](https://asherscott.github.io/Word-Muncher/)
